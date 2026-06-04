@@ -27,6 +27,11 @@
   /* default accent (IMAGE). ModeProvider overrides this on its wrapper. */
   --accent: #3b6dff;
   color-scheme: dark;
+
+  /* the literal margin system — a thousand margins.
+     defined here (NOT in @theme) so var(--margin-page) resolves at runtime. */
+  --margin-page: clamp(1.5rem, 5.5vw, 7rem);
+  --margin-top: clamp(5.5rem, 9vh, 8rem); /* clears the fixed nav */
 }
 
 * {

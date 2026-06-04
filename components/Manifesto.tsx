@@ -24,18 +24,13 @@ export function Manifesto({
     () => {
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-      const lines = gsap.utils.toArray<HTMLElement>("[data-bleed]");
-      gsap.set(lines, {
+      // gsap.from animates FROM hidden TO the natural (visible) state, so the
+      // resting state is always visible — if the tween never runs, nothing is
+      // stuck at opacity 0.
+      gsap.from("[data-bleed]", {
         opacity: 0,
         y: 28,
         filter: "blur(14px)",
-        fontVariationSettings: '"wght" 200, "opsz" 48',
-      });
-      gsap.to(lines, {
-        opacity: 1,
-        y: 0,
-        filter: "blur(0px)",
-        fontVariationSettings: '"wght" 380, "opsz" 48',
         duration: 1.3,
         ease: "power3.out",
         stagger: 0.14,
