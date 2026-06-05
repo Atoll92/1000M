@@ -17,6 +17,7 @@ export function Waveform({
   title,
   height = 160,
   active = true,
+  startAt = 0,
   className = "",
 }: {
   src: string;
@@ -25,6 +26,8 @@ export function Waveform({
   height?: number;
   /** when false (e.g. hidden hero layer), don't claim the shared seek */
   active?: boolean;
+  /** seconds — playback begins here the first time the user presses play */
+  startAt?: number;
   className?: string;
 }) {
   const wrap = useRef<HTMLDivElement>(null);
@@ -36,6 +39,7 @@ export function Waveform({
   const freq = useRef<Uint8Array<ArrayBuffer> | null>(null);
   const raf = useRef(0);
   const level = useRef(0); // live amplitude 0..1
+  const hasStarted = useRef(false); // has the user pressed play at least once
 
   const { progress, time, duration, playing, report, setPlaying, registerSeek } =
     useTransport();
@@ -154,6 +158,11 @@ export function Waveform({
     const au = audio.current;
     if (!au) return;
     if (au.paused) {
+      // first play jumps to the configured start offset (e.g. 9:35)
+      if (!hasStarted.current && startAt > 0) {
+        au.currentTime = startAt;
+      }
+      hasStarted.current = true;
       ensureGraph();
       await ctxRef.current?.resume();
       au.play().catch(() => {});
@@ -240,7 +249,12 @@ export function Waveform({
         }}
         onLoadedMetadata={(e) => {
           const a = e.currentTarget;
-          report({ progress: 0, time: 0, duration: a.duration || 0 });
+          // pre-position the playhead at the start offset (display only)
+          if (!hasStarted.current && startAt > 0 && a.duration) {
+            a.currentTime = Math.min(startAt, a.duration);
+          }
+          const t = a.currentTime || 0;
+          report({ progress: t / (a.duration || 1), time: t, duration: a.duration || 0 });
         }}
         onPlay={() => setPlaying(true)}
         onPause={() => setPlaying(false)}

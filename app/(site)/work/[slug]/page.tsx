@@ -109,6 +109,7 @@ export default async function ProjectPage({
                 src={project.audio}
                 peaks={project.peaks}
                 title={project.audioTitle ?? project.title}
+                startAt={project.audioStartAt}
                 height={140}
               />
             </TransportProvider>

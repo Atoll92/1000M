@@ -12,6 +12,7 @@ export default function HomePage() {
         src: sonProject.audio!,
         peaks: sonProject.peaks!,
         title: sonProject.audioTitle,
+        startAt: sonProject.audioStartAt,
       }
     : undefined;
 

@@ -35,6 +35,7 @@ export interface Project {
   video?: string; // mp4 for now
   audio?: string; // mp3/wav for SON projects
   audioTitle?: string; // label shown in the waveform transport
+  audioStartAt?: number; // seconds — where playback starts when you press play
   peaks?: number[]; // precomputed, normalized 0..1 (see scripts/peaks.mjs)
   runtime?: string; // "04:12"
   gear?: string; // "Shot on Arri Alexa Mini"

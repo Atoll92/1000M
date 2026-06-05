@@ -22,7 +22,7 @@ import { fileURLToPath } from "node:url";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = resolve(__dirname, "..");
 const PEAKS = 200; // bars per track
-const SLUGS = ["basse-continue", "hors-champ", "regie-nuit", "marge-brute"];
+const SLUGS = ["20-pierres", "hors-champ", "regie-nuit", "marge-brute"];
 
 function findAudio(slug) {
   for (const ext of ["mp3", "wav", "m4a", "flac"]) {

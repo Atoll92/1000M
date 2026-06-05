@@ -8,6 +8,7 @@ export interface SonTrack {
   src: string;
   peaks: number[];
   title?: string;
+  startAt?: number;
 }
 
 /**
@@ -69,6 +70,7 @@ export function HeroMedia({
             src={son.src}
             peaks={son.peaks}
             title={son.title}
+            startAt={son.startAt}
             height={200}
             active={!isImage}
             className="max-w-4xl"
