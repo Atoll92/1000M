@@ -20,11 +20,7 @@ export const projects: Project[] = [
     video: VID("ForBiggerJoyrides"),
     runtime: "14:20",
     gear: "Shot on Arri Alexa 35 · Cooke S4/i",
-    credits: [
-      { memberSlug: "camille-roussel", roleId: "chefop" },
-      { memberSlug: "lou-marchetti", roleId: "cadreur" },
-      { memberSlug: "margaux-lefevre", roleId: "etalonneur" },
-    ],
+    credits: [],
     description:
       "Un court-métrage tourné en anamorphique sur trois nuits. L'image et le son captés ensemble, au plus près du grain de la ville.",
     featured: true,
@@ -68,12 +64,7 @@ export const projects: Project[] = [
     peaks: peaks["hors-champ"],
     runtime: "26:00",
     gear: "Sony VENICE · Sound Devices 833",
-    credits: [
-      { memberSlug: "lou-marchetti", roleId: "monteur" },
-      { memberSlug: "theo-nguyen", roleId: "perchman" },
-      { memberSlug: "salome-vidal", roleId: "compositeur" },
-      { memberSlug: "nina-faure", roleId: "ingeson" },
-    ],
+    credits: [],
     description:
       "Documentaire où le son précède toujours l'image. Ce qui déborde du cadre y est le vrai sujet.",
     featured: true,
@@ -91,10 +82,7 @@ export const projects: Project[] = [
     peaks: peaks["regie-nuit"],
     runtime: "58:12",
     gear: "DiGiCo SD12 · captation 32 pistes",
-    credits: [
-      { memberSlug: "idriss-benali", roleId: "ingeson" },
-      { memberSlug: "nina-faure", roleId: "compositeur" },
-    ],
+    credits: [],
     description:
       "Captation live d'une nuit entière. Mixée au petit matin, dans la fatigue qui aiguise l'oreille.",
     order: 4,
@@ -109,10 +97,7 @@ export const projects: Project[] = [
     video: VID("ForBiggerMeltdowns"),
     runtime: "09:30",
     gear: "Shot on RED V-Raptor · DJI Ronin 2",
-    credits: [
-      { memberSlug: "camille-roussel", roleId: "chefop" },
-      { memberSlug: "antoine-rivet", roleId: "monteur" },
-    ],
+    credits: [],
     description:
       "Neuf minutes, une seule prise. La chorégraphie de la caméra et des corps répétée vingt nuits durant.",
     featured: true,
@@ -131,11 +116,7 @@ export const projects: Project[] = [
     peaks: peaks["marge-brute"],
     runtime: "07:05",
     gear: "Blackmagic URSA · Schoeps CMC",
-    credits: [
-      { memberSlug: "lou-marchetti", roleId: "cadreur" },
-      { memberSlug: "nina-faure", roleId: "compositeur" },
-      { memberSlug: "antoine-rivet", roleId: "etalonneur" },
-    ],
+    credits: [],
     description:
       "Auto-production. Tout le monde à tous les postes, la marge comme méthode plutôt que comme contrainte.",
     order: 6,
