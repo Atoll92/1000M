@@ -18,6 +18,8 @@ export interface Member {
   skills: string[]; // ["Steadicam", "Arri Alexa", "Étalonnage"]
   reel?: string; // optional video url
   order: number;
+  /** false → credited on projects but not listed on the Équipe page */
+  listed?: boolean;
 }
 
 export interface ProjectCredit {

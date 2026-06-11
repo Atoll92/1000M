@@ -27,4 +27,7 @@ export const roleLabel = (m: Member) =>
 export const memberInMode = (m: Member, mode: RoleCategory) =>
   rolesForMember(m).some((r) => r.category === mode || r.category === "both");
 
-export const crewSorted = () => [...crew].sort((a, b) => a.order - b.order);
+/** Members shown on the Équipe page (and its prev/next nav), in order.
+ *  Unlisted members (`listed: false`) stay credited on project pages. */
+export const crewSorted = () =>
+  crew.filter((m) => m.listed !== false).sort((a, b) => a.order - b.order);
