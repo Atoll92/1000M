@@ -32,6 +32,7 @@ export function VideoMedia({
 }) {
   const ref = useRef<HTMLVideoElement>(null);
   const [reduce, setReduce] = useState(false);
+  const [failed, setFailed] = useState(false);
 
   // transport is optional, null when rendered outside the hero provider
   const transport = useTransportOptional();
@@ -56,7 +57,9 @@ export function VideoMedia({
     });
   }, [bindTransport, transport, active]);
 
-  if (!src) {
+  // no source, or the source failed to load → show the still, never the
+  // browser's broken-video chrome
+  if (!src || failed) {
     return poster ? (
       // eslint-disable-next-line @next/next/no-img-element
       <img src={poster} alt="" className={className} />
@@ -75,6 +78,7 @@ export function VideoMedia({
       controls={controls}
       preload={controls ? "metadata" : "none"}
       src={src}
+      onError={() => setFailed(true)}
       onTimeUpdate={
         bindTransport && transport
           ? (e) => {
