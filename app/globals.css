@@ -151,6 +151,54 @@ html.lenis body { height: auto; }
 }
 
 /* ------------------------------------------------------------------ *
+ *  SON reel — the homepage background re-printed in negative, pulsed
+ *  by the music. Deliberately compositor-only: color-matrix filter,
+ *  transform and opacity react to --lvl (written at ~11 Hz from the
+ *  analyser); CSS transitions interpolate between writes. No SVG
+ *  displacement — fullscreen feDisplacementMap renders on the CPU.
+ * ------------------------------------------------------------------ */
+.son-reel {
+  --lvl: 0;
+}
+
+/* hardcoded "live" drift so the print never sits still (zero JS) */
+.son-drift {
+  animation: son-drift 38s ease-in-out infinite alternate;
+  will-change: transform;
+}
+@keyframes son-drift {
+  from { transform: scale(1.06) translate(-0.7%, -0.5%); }
+  to   { transform: scale(1.1) translate(0.7%, 0.5%); }
+}
+
+.son-reel-media {
+  transform: scale(1.02);
+  transition: transform 220ms ease-out;
+}
+.son-reel.is-on .son-reel-media {
+  /* the negative re-print; hue/contrast/brightness lean into the music */
+  filter: invert(1) sepia(0.32)
+    hue-rotate(calc(-18deg - var(--lvl) * 55deg))
+    saturate(calc(1.15 + var(--lvl) * 1.1))
+    contrast(calc(1.08 + var(--lvl) * 0.35))
+    brightness(calc(1 + var(--lvl) * 0.2));
+  transform: scale(calc(1.02 + var(--lvl) * 0.06));
+  transition: filter 200ms linear, transform 220ms ease-out;
+}
+
+/* accent flare blooming on peaks (opacity only) */
+.son-flare {
+  opacity: 0;
+  transition: opacity 200ms linear;
+  background: radial-gradient(60% 50% at 50% 42%, var(--accent), transparent 72%);
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+}
+.son-reel.is-on .son-flare {
+  opacity: calc(var(--lvl) * 0.6);
+}
+
+/* ------------------------------------------------------------------ *
  *  Paper surface — the margin of the dark print. Re-scopes the ink/
  *  paper/hairline tokens so everything inside (hairlines, margin
  *  notes, rails) re-inks itself automatically.

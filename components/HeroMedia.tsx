@@ -18,10 +18,13 @@ export interface SonTrack {
  * pauses on a toggle, and neither does the music once it has started:
  *   IMAGE → the reel, plain, owning the shared transport scrubber
  *   SON   → the same reel seen through a thinner ink veil, re-printed in
- *           negative and warped in real time by the playing audio
- *           (feTurbulence/feDisplacementMap driven by the analyser level) —
- *           image and son as one gesture.
- * Entering SON starts the track at its cue, riding the toggle's activation.
+ *           negative and pulsed by the playing audio.
+ * The reactivity is compositor-only on purpose (color-matrix filter,
+ * transform, opacity — see .son-reel in globals.css): the analyser level is
+ * written to a CSS var at ~11 Hz and CSS transitions smooth in between.
+ * No SVG displacement — fullscreen feDisplacementMap is software-rendered
+ * and burns CPU. Entering SON starts the track at its cue, riding the
+ * toggle's activation.
  */
 export function HeroMedia({
   video,
@@ -38,97 +41,58 @@ export function HeroMedia({
   const isImage = mode === "image";
   const transport = useTransportOptional();
   const [reduce, setReduce] = useState(false);
-
-  const turb = useRef<SVGFETurbulenceElement>(null);
-  const warp = useRef<SVGFEDisplacementMapElement>(null);
+  const reel = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setReduce(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
   }, []);
 
-  // real-time distortion: the displacement field breathes with the music.
-  // Attribute writes are cheap; the displacement render is the cost, so the
-  // loop only runs in SON mode and the turbulence drifts at low frequency.
+  // feed the live level into --lvl at low frequency; CSS does the easing.
+  // Writes are skipped while the value is static so an idle SON hero
+  // costs nothing.
   useEffect(() => {
-    if (isImage || reduce) {
-      warp.current?.setAttribute("scale", "0");
+    const el = reel.current;
+    if (!el || isImage || reduce) {
+      reel.current?.style.setProperty("--lvl", "0");
       return;
     }
-    let raf = 0;
-    let cur = 0;
-    let frame = 0;
-    const loop = (now: number) => {
-      const lvl = transport?.levelRef.current ?? 0;
-      const target = 12 + lvl * 140; // idle ripple → loud warp
-      cur += (target - cur) * 0.1;
-      warp.current?.setAttribute("scale", cur.toFixed(1));
-      if (frame++ % 12 === 0) {
-        const bf = 0.005 + Math.sin(now * 0.00011) * 0.0018 + lvl * 0.004;
-        turb.current?.setAttribute(
-          "baseFrequency",
-          `${bf.toFixed(4)} ${(bf * 1.7).toFixed(4)}`,
-        );
+    let id = 0;
+    let last = -1;
+    const tick = () => {
+      const raw = transport?.levelRef.current ?? 0;
+      const lvl = Math.min(1, raw * 1.7); // make peaks actually land
+      if (Math.abs(lvl - last) > 0.012) {
+        el.style.setProperty("--lvl", lvl.toFixed(3));
+        last = lvl;
       }
-      raf = requestAnimationFrame(loop);
+      id = window.setTimeout(tick, 90);
     };
-    raf = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(raf);
+    tick();
+    return () => clearTimeout(id);
   }, [isImage, reduce, transport]);
 
   return (
     <div className="absolute inset-0 overflow-hidden">
-      {/* displacement field for the SON re-print */}
-      <svg aria-hidden className="absolute h-0 w-0">
-        <defs>
-          <filter
-            id="son-warp"
-            x="-10%"
-            y="-10%"
-            width="120%"
-            height="120%"
-            colorInterpolationFilters="sRGB"
-          >
-            <feTurbulence
-              ref={turb}
-              type="fractalNoise"
-              baseFrequency="0.005 0.0085"
-              numOctaves="2"
-              seed="7"
-              result="n"
-            />
-            <feDisplacementMap
-              ref={warp}
-              in="SourceGraphic"
-              in2="n"
-              scale="0"
-              xChannelSelector="R"
-              yChannelSelector="G"
-            />
-          </filter>
-        </defs>
-      </svg>
-
       {/* the one reel, both modes — never remounts, never pauses */}
-      <div
-        className="absolute inset-0 scale-[1.04]"
-        style={{
-          filter: isImage
-            ? undefined
-            : "url(#son-warp) invert(1) contrast(1.1) saturate(1.2) sepia(0.3) hue-rotate(-18deg)",
-        }}
-      >
-        <VideoMedia
-          src={video}
-          poster={poster}
-          active
-          bindTransport
-          transportActive={isImage}
-          className="h-full w-full object-cover"
-        />
+      <div ref={reel} className={`son-reel absolute inset-0 ${isImage ? "" : "is-on"}`}>
+        <div className="son-drift absolute inset-0">
+          <div className="son-reel-media absolute inset-0">
+            <VideoMedia
+              src={video}
+              poster={poster}
+              active
+              bindTransport
+              transportActive={isImage}
+              className="h-full w-full object-cover"
+            />
+          </div>
+        </div>
+        {/* accent flare, breathes with the music (opacity = compositor) */}
+        <div className="son-flare absolute inset-0" aria-hidden />
       </div>
       <div className="absolute inset-0 bg-ink/40 mix-blend-multiply" />
 
-      {/* SON layer — a thinner ink veil so the warped print reads through */}
+      {/* SON layer — a thinner ink veil so the re-printed reel reads through */}
       <div
         className={`absolute inset-0 flex flex-col items-center justify-center bg-ink/70 px-[var(--margin-page)] pb-[26vh] transition-opacity duration-700 ${
           isImage ? "pointer-events-none opacity-0" : "opacity-100"
