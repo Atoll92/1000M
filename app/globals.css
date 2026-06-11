@@ -32,6 +32,11 @@
      defined here (NOT in @theme) so var(--margin-page) resolves at runtime. */
   --margin-page: clamp(1.5rem, 5.5vw, 7rem);
   --margin-top: clamp(5.5rem, 9vh, 8rem); /* clears the fixed nav */
+
+  /* the annotated margin rail — the visible left column where all
+     metadata (kickers, numbers, timecodes, notes) lives on md+ */
+  --rail-w: clamp(8rem, 15vw, 14rem);
+  --rail-gap: clamp(1.5rem, 3vw, 3.5rem);
 }
 
 * {
@@ -76,16 +81,66 @@ html.lenis body { height: auto; }
 
 .hairline { border-color: var(--color-hairline); }
 
-/* huge display headline — variable axes animate on hover */
+/* ------------------------------------------------------------------ *
+ *  Type ramp — four registers, no more:
+ *    .display      large statements (calm, light)
+ *    .title        section / card titles (firm)
+ *    body          Bricolage 400, set per-context with Tailwind
+ *    .margin-note  mono annotations, strictly for marginalia
+ * ------------------------------------------------------------------ */
 .display {
   font-family: var(--font-display);
-  font-weight: 200;
-  line-height: 0.92;
-  letter-spacing: -0.02em;
-  font-variation-settings: "wght" 300, "opsz" 48;
+  line-height: 0.97;
+  letter-spacing: -0.015em;
+  font-variation-settings: "wght" 280, "opsz" 48;
+}
+
+.title {
+  font-family: var(--font-display);
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+  font-variation-settings: "wght" 560, "opsz" 32;
+}
+
+/* opt-in variable-weight sweep — reserved for the Équipe name block */
+.sweep {
   transition: font-variation-settings 500ms cubic-bezier(0.22, 1, 0.36, 1);
 }
-.display:hover { font-variation-settings: "wght" 600, "opsz" 48; }
+.sweep:hover,
+.sweep:focus-visible {
+  font-variation-settings: "wght" 620, "opsz" 48;
+}
+
+/* ------------------------------------------------------------------ *
+ *  The margin rail — body + annotated margin, hairline between.
+ *  Sections stack flush so the rule reads as one continuous line;
+ *  vertical rhythm comes from padding inside the two cells.
+ * ------------------------------------------------------------------ */
+.rail-section {
+  padding-inline: var(--margin-page);
+}
+@media (min-width: 768px) {
+  .rail-section {
+    display: grid;
+    grid-template-columns: var(--rail-w) minmax(0, 1fr);
+    column-gap: var(--rail-gap);
+    padding-left: clamp(1.5rem, 3vw, 3rem);
+  }
+  .rail-cell {
+    border-right: 1px solid var(--color-hairline);
+    padding-right: clamp(1rem, 2vw, 2rem);
+  }
+}
+@media (max-width: 767.98px) {
+  .rail-cell:not(:empty) {
+    margin-bottom: 1.25rem;
+  }
+}
+
+/* interaction hints that only make sense with a pointer */
+@media (hover: none) {
+  .hover-hint { display: none; }
+}
 
 /* ------------------------------------------------------------------ *
  *  Film grain + gate vignette overlays (mounted once in layout)

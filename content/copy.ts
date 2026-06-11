@@ -56,7 +56,7 @@ export const contact = {
   kicker: "Contact, 1000 marges",
   leadA: "Un projet d’image,",
   leadB: "de son,",
-  leadAccent: "ou les deux ?",
+  leadAccent: "ou les deux ?", // espace fine insécable, le « ? » ne s'orpheline pas
 };
 
 export const footer = {

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Footer } from "@/components/Footer";
 import { Reveal } from "@/components/Reveal";
+import { RailSection } from "@/components/Rail";
 import { studio } from "@/content/copy";
 
 export const metadata: Metadata = {
@@ -18,56 +19,71 @@ const catLabel: Record<string, string> = {
 export default function StudioPage() {
   return (
     <>
-      <main className="min-h-screen px-[var(--margin-page)] pb-28 pt-32">
-        <header className="border-b border-hairline pb-10">
-          <p className="margin-note mb-6">{studio.kicker}</p>
+      <main className="min-h-screen pb-28 pt-32">
+        <RailSection
+          rail={<p className="margin-note">{studio.kicker}</p>}
+          railClassName="pb-12 pt-2"
+          bodyClassName="pb-16"
+        >
           <Reveal>
-            <h1 className="display max-w-5xl text-[clamp(2rem,6vw,5rem)] leading-[1.02]">
+            <h1 className="display max-w-4xl text-[clamp(2rem,5.5vw,4.5rem)]">
               {studio.manifesto}
             </h1>
           </Reveal>
-        </header>
+        </RailSection>
 
-        <section className="py-16">
-          {studio.philosophy.map((block, i) => (
-            <Reveal
-              key={i}
-              className="grid grid-cols-1 gap-6 border-b border-hairline py-12 md:grid-cols-12"
-            >
-              <span className="margin-note md:col-span-1">
+        {studio.philosophy.map((block, i) => (
+          <RailSection
+            key={i}
+            rail={
+              <p className="margin-note tabular-nums">
                 {String(i + 1).padStart(2, "0")}
-              </span>
-              <h2 className="display text-3xl md:col-span-4 md:text-4xl">
+              </p>
+            }
+            railClassName="pt-2 md:py-12"
+            bodyClassName="pb-12 md:pt-10"
+          >
+            <Reveal className="grid grid-cols-1 gap-6 md:grid-cols-12">
+              <h2 className="title text-2xl md:col-span-5 md:text-3xl">
                 {block.heading}
               </h2>
-              <p className="max-w-2xl text-lg leading-relaxed text-paper/85 md:col-span-7">
+              <p className="max-w-xl text-lg leading-relaxed text-paper/85 md:col-span-7">
                 {block.body}
               </p>
             </Reveal>
-          ))}
-        </section>
+          </RailSection>
+        ))}
 
-        <section className="border-t border-hairline py-16">
-          <p className="margin-note mb-10">Services</p>
-          <div className="grid grid-cols-1 gap-px md:grid-cols-2">
+        <RailSection
+          rail={<p className="margin-note">Services</p>}
+          railClassName="py-2 md:py-14"
+          bodyClassName="pb-14 md:pt-12"
+        >
+          <div className="grid grid-cols-1 gap-px bg-hairline md:grid-cols-2">
             {studio.services.map((s, i) => (
               <div
                 key={i}
-                className="group relative border border-hairline p-8 transition-colors hover:border-transparent"
+                className="group relative bg-ink p-8 transition-colors"
               >
-                <span
-                  className="absolute inset-0 -z-10 opacity-0 transition-opacity group-hover:opacity-10"
-                  style={{ background: "var(--accent)" }}
-                />
-                <p className="margin-note mb-3" style={{ color: "var(--accent)" }}>
+                <p
+                  className="margin-note mb-3"
+                  style={{ color: "var(--accent)" }}
+                >
                   {catLabel[s.category]}
                 </p>
-                <h3 className="display text-2xl">{s.title}</h3>
-                <p className="mt-3 max-w-md text-paper/75">{s.body}</p>
+                <h3 className="title text-2xl">{s.title}</h3>
+                <p className="mt-3 max-w-md leading-relaxed text-paper/75">
+                  {s.body}
+                </p>
+                {/* annotation-ink tick, drawn on hover */}
+                <span
+                  className="absolute left-0 top-8 h-0 w-px transition-all duration-500 group-hover:h-12"
+                  style={{ background: "var(--accent)" }}
+                />
               </div>
             ))}
           </div>
-        </section>
+        </RailSection>
       </main>
       <Footer />
     </>

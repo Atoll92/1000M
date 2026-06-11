@@ -4,6 +4,7 @@ import { TransitionLink } from "@/components/TransitionLink";
 import { VideoMedia } from "@/components/VideoMedia";
 import { Footer } from "@/components/Footer";
 import { Reveal } from "@/components/Reveal";
+import { RailSection } from "@/components/Rail";
 import {
   crew,
   crewSorted,
@@ -44,77 +45,94 @@ export default async function MemberPage({
 
   return (
     <>
-      <main className="min-h-screen px-[var(--margin-page)] pb-28 pt-32">
-        <TransitionLink href="/equipe" className="margin-note mb-8 inline-block hover:text-paper">
-          ← Équipe
-        </TransitionLink>
-
-        <div className="grid grid-cols-1 gap-12 md:grid-cols-12">
-          {/* portrait or reel */}
-          <Reveal className="md:col-span-5">
-            <div className="aspect-[3/4] w-full overflow-hidden bg-ink">
-              {member.reel ? (
-                <VideoMedia
-                  src={member.reel}
-                  poster={member.portrait}
-                  controls
-                  muted={false}
-                  autoPlay={false}
-                  loop={false}
-                  className="h-full w-full object-cover"
-                />
-              ) : (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={member.portrait}
-                  alt={member.name}
-                  className="h-full w-full object-cover"
-                />
-              )}
-            </div>
-          </Reveal>
-
-          <div className="md:col-span-7">
-            <p className="margin-note" style={{ color: "var(--accent)" }}>
-              {roleLabel(member)}
-            </p>
-            <h1
-              className="display mt-3 text-[clamp(2.6rem,8vw,6rem)]"
-              style={{ viewTransitionName: `member-${member.slug}` }}
-            >
-              {member.name}
-            </h1>
-
-            <p className="mt-8 max-w-2xl text-lg leading-relaxed text-paper/85">
-              {member.bio}
-            </p>
-
-            {member.skills.length ? (
-              <div className="mt-10">
-                <p className="margin-note mb-3">Compétences</p>
-                <div className="flex flex-wrap gap-2">
-                  {member.skills.map((s) => (
-                    <span
-                      key={s}
-                      className="rounded-full border border-hairline px-3 py-1 font-mono text-[11px] uppercase tracking-widest text-paper-dim"
-                    >
-                      {s}
-                    </span>
-                  ))}
+      <main className="min-h-screen pb-28 pt-32">
+        {/* identity — roles & skills annotated in the rail */}
+        <RailSection
+          rail={
+            <div className="flex flex-col gap-6">
+              <TransitionLink
+                href="/equipe"
+                className="margin-note inline-block hover:text-paper"
+              >
+                ← Équipe
+              </TransitionLink>
+              <p className="margin-note" style={{ color: "var(--accent)" }}>
+                {roleLabel(member)}
+              </p>
+              {member.skills.length ? (
+                <div>
+                  <p className="margin-note mb-2 opacity-70">Compétences</p>
+                  <ul className="space-y-1">
+                    {member.skills.map((s) => (
+                      <li
+                        key={s}
+                        className="font-mono text-[11px] uppercase tracking-[0.18em] text-paper-dim"
+                      >
+                        {s}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
+              ) : null}
+            </div>
+          }
+          railClassName="pb-10 pt-2"
+          bodyClassName="pb-16"
+        >
+          <h1
+            className="display text-[clamp(2.6rem,7vw,5.5rem)]"
+            style={{ viewTransitionName: `member-${member.slug}` }}
+          >
+            {member.name}
+          </h1>
+
+          <div className="mt-10 grid grid-cols-1 gap-10 md:grid-cols-12">
+            <Reveal className="md:col-span-5">
+              <div className="aspect-[3/4] w-full overflow-hidden bg-ink">
+                {member.reel ? (
+                  <VideoMedia
+                    src={member.reel}
+                    poster={member.portrait}
+                    controls
+                    muted={false}
+                    autoPlay={false}
+                    loop={false}
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={member.portrait}
+                    alt={member.name}
+                    className="h-full w-full object-cover"
+                  />
+                )}
               </div>
-            ) : null}
+            </Reveal>
+
+            <div className="md:col-span-7">
+              <p className="max-w-xl text-lg leading-relaxed text-paper/85">
+                {member.bio}
+              </p>
+            </div>
           </div>
-        </div>
+        </RailSection>
 
         {/* projects with this member */}
         {memberProjects.length ? (
-          <section className="mt-20 border-t border-hairline pt-10">
-            <p className="margin-note mb-8">Projets</p>
-            <ul className="grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-4">
+          <RailSection
+            rail={<p className="margin-note">Projets</p>}
+            railClassName="py-2 md:py-12"
+            bodyClassName="pb-12 md:pt-10"
+          >
+            <ul className="grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-3">
               {memberProjects.map((p) => (
                 <li key={p.slug}>
-                  <TransitionLink href={`/work/${p.slug}`} className="group block" data-cursor-label="Voir">
+                  <TransitionLink
+                    href={`/work/${p.slug}`}
+                    className="group block"
+                    data-cursor-label="Voir"
+                  >
                     <div className="aspect-[4/3] w-full overflow-hidden bg-ink">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
@@ -124,46 +142,52 @@ export default async function MemberPage({
                         className="h-full w-full object-cover grayscale transition duration-500 group-hover:grayscale-0"
                       />
                     </div>
-                    <p className="mt-2 font-display text-lg">{p.title}</p>
+                    <p className="title mt-2 text-lg">{p.title}</p>
                     <p className="margin-note">{p.year}</p>
                   </TransitionLink>
                 </li>
               ))}
             </ul>
-          </section>
+          </RailSection>
         ) : null}
 
-        {/* prev / next member, filmstrip style */}
-        <nav className="mt-20 grid grid-cols-2 gap-px border-t border-hairline">
-          {[
-            { m: prev, label: "← Précédent" },
-            { m: next, label: "Suivant →" },
-          ].map(({ m, label }, i) => (
-            <TransitionLink
-              key={m.slug}
-              href={`/equipe/${m.slug}`}
-              data-cursor-label="Voir"
-              className={`group relative flex h-40 items-center gap-4 overflow-hidden bg-ink p-5 ${
-                i === 1 ? "flex-row-reverse text-right" : ""
-              }`}
-            >
-              <div className="h-28 w-20 shrink-0 overflow-hidden">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={m.portrait}
-                  alt={m.name}
-                  loading="lazy"
-                  className="h-full w-full object-cover grayscale transition duration-500 group-hover:grayscale-0"
-                />
-              </div>
-              <div>
-                <p className="margin-note">{label}</p>
-                <p className="display mt-1 text-2xl">{m.name}</p>
-                <p className="margin-note mt-1">{roleLabel(m)}</p>
-              </div>
-            </TransitionLink>
-          ))}
-        </nav>
+        {/* prev / next member */}
+        <RailSection
+          rail={<p className="margin-note">Aussi dans l’équipe</p>}
+          railClassName="py-2 md:py-12"
+          bodyClassName="pb-4 md:pt-10"
+        >
+          <nav className="grid grid-cols-1 gap-px border-y border-hairline sm:grid-cols-2">
+            {[
+              { m: prev, label: "← Précédent" },
+              { m: next, label: "Suivant →" },
+            ].map(({ m, label }, i) => (
+              <TransitionLink
+                key={m.slug}
+                href={`/equipe/${m.slug}`}
+                data-cursor-label="Voir"
+                className={`group relative flex h-36 items-center gap-4 overflow-hidden bg-ink p-5 ${
+                  i === 1 ? "sm:flex-row-reverse sm:text-right" : ""
+                }`}
+              >
+                <div className="h-24 w-18 shrink-0 overflow-hidden">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={m.portrait}
+                    alt={m.name}
+                    loading="lazy"
+                    className="h-full w-full object-cover grayscale transition duration-500 group-hover:grayscale-0"
+                  />
+                </div>
+                <div>
+                  <p className="margin-note">{label}</p>
+                  <p className="title mt-1 text-xl">{m.name}</p>
+                  <p className="margin-note mt-1">{roleLabel(m)}</p>
+                </div>
+              </TransitionLink>
+            ))}
+          </nav>
+        </RailSection>
       </main>
       <Footer />
     </>

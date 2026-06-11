@@ -115,7 +115,7 @@ export function CrewIndex({ members }: { members: Member[] }) {
                 onBlur={() => setActive(null)}
                 data-cursor-label="Voir"
                 style={{ viewTransitionName: `member-${m.slug}` }}
-                className={`transition-[opacity,color] duration-300 ${opacity} ${
+                className={`sweep transition-[opacity,color] duration-300 ${opacity} ${
                   isActive ? "italic" : ""
                 }`}
                 {...(isActive ? { "data-active": true } : {})}

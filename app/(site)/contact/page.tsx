@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Reveal } from "@/components/Reveal";
 import { Timecode } from "@/components/Timecode";
+import { RailSection } from "@/components/Rail";
 import { contact, site } from "@/content/copy";
 
 export const metadata: Metadata = {
@@ -10,11 +11,53 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <main className="flex min-h-screen flex-col justify-between px-[var(--margin-page)] pb-12 pt-32">
-      <div>
-        <p className="margin-note mb-8">{contact.kicker}</p>
+    <main className="min-h-screen pb-12 pt-32">
+      <RailSection
+        rail={
+          <div className="flex h-full flex-col gap-8">
+            <p className="margin-note">{contact.kicker}</p>
+
+            <div>
+              <p className="margin-note opacity-70">Base</p>
+              <p className="mt-1 font-mono text-xs text-paper">{site.base}</p>
+            </div>
+
+            <div>
+              <p className="margin-note opacity-70">Réseaux</p>
+              <ul className="mt-1 space-y-1">
+                {site.socials.map((s) => (
+                  <li key={s.url}>
+                    <a
+                      href={s.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="font-mono text-xs text-paper transition-colors hover:text-[var(--accent)]"
+                    >
+                      {s.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <p className="margin-note opacity-70">Pôles</p>
+              <p className="mt-1 font-mono text-xs text-paper">{site.tagline}</p>
+            </div>
+
+            <div>
+              <p className="margin-note opacity-70">Session</p>
+              <p className="mt-1">
+                <Timecode className="text-paper" />
+              </p>
+            </div>
+          </div>
+        }
+        railClassName="min-h-[60vh] pb-10 pt-2"
+        bodyClassName="pb-10"
+      >
         <Reveal>
-          <h1 className="display text-[clamp(2.4rem,7vw,6rem)] leading-[0.95]">
+          <h1 className="display text-[clamp(2.4rem,7vw,6rem)]">
             {contact.leadA}
             <br />
             {contact.leadB}
@@ -28,45 +71,11 @@ export default function ContactPage() {
         <a
           href={`mailto:${site.email}`}
           data-cursor-label="Écrire"
-          className="mt-10 inline-block font-mono text-xl tracking-wide text-paper underline decoration-hairline underline-offset-8 transition hover:decoration-[var(--accent)] hover:text-[var(--accent)]"
+          className="mt-12 inline-block font-mono text-lg tracking-wide text-paper underline decoration-hairline underline-offset-8 transition hover:decoration-[var(--accent)] md:text-xl"
         >
           {site.email}
         </a>
-      </div>
-
-      <div className="grid grid-cols-2 gap-8 border-t border-hairline pt-8 md:grid-cols-4">
-        <div>
-          <p className="margin-note">Réseaux</p>
-          <ul className="mt-2 space-y-1">
-            {site.socials.map((s) => (
-              <li key={s.url}>
-                <a
-                  href={s.url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="font-mono text-sm text-paper hover:text-[var(--accent)]"
-                >
-                  {s.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div>
-          <p className="margin-note">Base</p>
-          <p className="mt-2 font-mono text-sm text-paper">{site.base}</p>
-        </div>
-        <div>
-          <p className="margin-note">Heure locale</p>
-          <p className="mt-2 font-mono text-sm text-paper">
-            <Timecode />
-          </p>
-        </div>
-        <div>
-          <p className="margin-note">Pôles</p>
-          <p className="mt-2 font-mono text-sm text-paper">{site.tagline}</p>
-        </div>
-      </div>
+      </RailSection>
     </main>
   );
 }

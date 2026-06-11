@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { CrewIndex } from "@/components/CrewIndex";
 import { Footer } from "@/components/Footer";
-import { Reveal } from "@/components/Reveal";
+import { RailSection } from "@/components/Rail";
 import { crewSorted } from "@/content";
 
 export const metadata: Metadata = {
@@ -15,20 +15,26 @@ export default function EquipePage() {
 
   return (
     <>
-      <main className="min-h-screen px-[var(--margin-page)] pb-28 pt-32">
-        <header className="mb-12 flex flex-wrap items-end justify-between gap-6">
-          <Reveal>
-            <p className="margin-note mb-4">
-              Équipe, {members.length} artisans de l’image et du son
-            </p>
-          </Reveal>
-          <p className="margin-note max-w-xs leading-relaxed">
-            Survolez un nom, le visage, le métier et les compétences se
-            révèlent. Le mode IMAGE / SON met en avant le pôle concerné.
-          </p>
-        </header>
-
-        <CrewIndex members={members} />
+      <main className="min-h-screen pb-28 pt-32">
+        <RailSection
+          rail={
+            <div className="flex flex-col gap-4">
+              <p className="margin-note">
+                Équipe, {members.length} artisans de l’image et du son
+              </p>
+              <p className="margin-note hover-hint max-w-[12rem] leading-relaxed opacity-70">
+                Survolez un nom, le visage et le métier se révèlent.
+              </p>
+              <p className="margin-note max-w-[12rem] leading-relaxed opacity-70">
+                Le mode IMAGE / SON met en avant le pôle concerné.
+              </p>
+            </div>
+          }
+          railClassName="pb-10 pt-2"
+          bodyClassName="pb-10"
+        >
+          <CrewIndex members={members} />
+        </RailSection>
       </main>
       <Footer />
     </>

@@ -7,6 +7,7 @@ import { Waveform } from "@/components/Waveform";
 import { TransportProvider } from "@/components/TransportContext";
 import { Footer } from "@/components/Footer";
 import { Reveal } from "@/components/Reveal";
+import { RailSection } from "@/components/Rail";
 import { projects, projectBySlug, memberBySlug, roleById } from "@/content";
 
 const catLabel: Record<string, string> = {
@@ -42,12 +43,27 @@ export default async function ProjectPage({
   const project = projectBySlug(slug);
   if (!project) notFound();
 
+  const num = String(projects.findIndex((p) => p.slug === slug) + 1).padStart(2, "0");
+
+  const meta: [string, string | undefined][] = [
+    ["Client", project.client],
+    ["Année", String(project.year)],
+    ["Pôle", catLabel[project.category]],
+    ["Durée", project.runtime],
+  ];
+  if (project.gear) {
+    meta.push([
+      project.gear.startsWith("Shot on") ? "Tourné sur" : "Matériel",
+      project.gear,
+    ]);
+  }
+
   return (
     <>
       <main className="min-h-screen pb-28">
-        {/* full-frame hero media (shared element with the grid poster) */}
+        {/* full-frame plate (shared element with the grid poster) */}
         <section
-          className="relative h-[78vh] w-full overflow-hidden bg-ink"
+          className="relative h-[70vh] w-full overflow-hidden bg-ink"
           style={{ viewTransitionName: `poster-${project.slug}` }}
         >
           {project.video ? (
@@ -68,42 +84,74 @@ export default async function ProjectPage({
               className="h-full w-full object-cover"
             />
           )}
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink via-transparent to-ink/40" />
-          <div className="absolute bottom-8 left-[var(--margin-page)] right-[var(--margin-page)]">
-            <TransitionLink href="/work" className="margin-note mb-4 inline-block hover:text-paper">
-              ← Travaux
-            </TransitionLink>
-            <h1 className="display text-[clamp(2.6rem,9vw,7rem)]">{project.title}</h1>
-          </div>
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink to-transparent" />
         </section>
 
-        {/* metadata */}
-        <section className="grid grid-cols-1 gap-10 border-b border-hairline px-[var(--margin-page)] py-12 md:grid-cols-4">
-          {[
-            ["Client", project.client],
-            ["Année", project.year],
-            ["Pôle", catLabel[project.category]],
-            ["Durée", project.runtime],
-          ].map(([label, value]) =>
-            value ? (
-              <div key={label}>
-                <p className="margin-note">{label}</p>
-                <p className="mt-1 font-mono text-sm text-paper">{value}</p>
-              </div>
-            ) : null,
-          )}
-          {project.gear && (
-            <div className="md:col-span-4">
-              <p className="margin-note">{project.gear.startsWith("Shot on") ? "Tourné sur" : "Matériel"}</p>
-              <p className="mt-1 font-mono text-sm text-paper">{project.gear}</p>
+        {/* title — annotated in the rail */}
+        <RailSection
+          rail={
+            <div className="flex flex-row flex-wrap gap-x-6 gap-y-1 md:flex-col md:gap-2">
+              <TransitionLink
+                href="/work"
+                className="margin-note inline-block hover:text-paper"
+              >
+                ← Travaux
+              </TransitionLink>
+              <p className="margin-note tabular-nums">N°{num}</p>
             </div>
-          )}
-        </section>
+          }
+          railClassName="pt-3 md:pt-12"
+          bodyClassName="pt-2 pb-12 md:pt-10"
+        >
+          <h1 className="display text-[clamp(2.6rem,8vw,6.5rem)]">
+            {project.title}
+          </h1>
+        </RailSection>
+
+        {/* the margin carries the data; the body carries the prose */}
+        <RailSection
+          rail={
+            <dl className="grid grid-cols-2 gap-x-6 gap-y-5 md:grid-cols-1">
+              {meta.map(([label, value]) =>
+                value ? (
+                  <div key={label}>
+                    <dt className="margin-note">{label}</dt>
+                    <dd className="mt-1 font-mono text-xs text-paper">
+                      {value}
+                    </dd>
+                  </div>
+                ) : null,
+              )}
+            </dl>
+          }
+          railClassName="py-2 md:py-14"
+          bodyClassName="pb-14 md:pt-12"
+        >
+          <Reveal>
+            <p className="max-w-2xl text-lg leading-relaxed text-paper/85 md:text-xl">
+              {project.description}
+            </p>
+            {project.link && (
+              <a
+                href={project.link}
+                target="_blank"
+                rel="noreferrer"
+                data-cursor-label="Ouvrir"
+                className="mt-8 inline-block border-b border-hairline pb-1 font-mono text-[11px] uppercase tracking-[0.2em] text-paper transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
+              >
+                {project.linkLabel ?? "En savoir plus"} ↗
+              </a>
+            )}
+          </Reveal>
+        </RailSection>
 
         {/* SON projects: waveform listening transport */}
         {project.audio && project.peaks?.length ? (
-          <section className="border-b border-hairline px-[var(--margin-page)] py-12">
-            <p className="margin-note mb-4">Écoute</p>
+          <RailSection
+            rail={<p className="margin-note">Écoute</p>}
+            railClassName="py-2 md:py-12"
+            bodyClassName="pb-12 md:pt-10"
+          >
             <TransportProvider>
               <Waveform
                 src={project.audio}
@@ -113,41 +161,28 @@ export default async function ProjectPage({
                 height={140}
               />
             </TransportProvider>
-          </section>
+          </RailSection>
         ) : null}
-
-        {/* description */}
-        <section className="px-[var(--margin-page)] py-16">
-          <Reveal>
-            <p className="max-w-2xl text-xl leading-relaxed text-paper/85">
-              {project.description}
-            </p>
-            {project.link && (
-              <a
-                href={project.link}
-                target="_blank"
-                rel="noreferrer"
-                data-cursor-label="Ouvrir"
-                className="mt-8 inline-flex items-center gap-2 rounded-full border border-hairline px-5 py-2 font-mono text-[11px] uppercase tracking-[0.2em] text-paper transition hover:border-transparent hover:bg-[var(--accent)] hover:text-ink"
-              >
-                {project.linkLabel ?? "En savoir plus"} ↗
-              </a>
-            )}
-          </Reveal>
-        </section>
 
         {/* crew on this project */}
         {project.credits.length ? (
-          <section className="border-t border-hairline px-[var(--margin-page)] py-16">
-            <h2 className="margin-note mb-8">Équipe sur ce projet</h2>
-            <ul className="grid grid-cols-2 gap-x-6 gap-y-8 md:grid-cols-4">
+          <RailSection
+            rail={<p className="margin-note">Équipe sur ce projet</p>}
+            railClassName="py-2 md:py-12"
+            bodyClassName="pb-12 md:pt-10"
+          >
+            <ul className="grid grid-cols-2 gap-x-6 gap-y-8 md:grid-cols-3 lg:grid-cols-4">
               {project.credits.map((c, i) => {
                 const m = memberBySlug(c.memberSlug);
                 const role = roleById(c.roleId);
                 if (!m) return null;
                 return (
                   <li key={i}>
-                    <TransitionLink href={`/equipe/${m.slug}`} className="group block" data-cursor-label="Voir">
+                    <TransitionLink
+                      href={`/equipe/${m.slug}`}
+                      className="group block"
+                      data-cursor-label="Voir"
+                    >
                       <div className="aspect-[3/4] w-full overflow-hidden bg-ink">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
@@ -157,21 +192,21 @@ export default async function ProjectPage({
                           className="h-full w-full object-cover grayscale transition duration-500 group-hover:grayscale-0"
                         />
                       </div>
-                      <p className="mt-2 font-display text-lg">{m.name}</p>
+                      <p className="title mt-2 text-lg">{m.name}</p>
                       <p className="margin-note">{role?.label}</p>
                     </TransitionLink>
                   </li>
                 );
               })}
             </ul>
-          </section>
+          </RailSection>
         ) : null}
 
-        <div className="px-[var(--margin-page)]">
+        <RailSection rail={null} railClassName="md:py-2" bodyClassName="pt-4">
           <Link href="/work" className="margin-note hover:text-paper">
             ← Tous les travaux
           </Link>
-        </div>
+        </RailSection>
       </main>
       <Footer />
     </>

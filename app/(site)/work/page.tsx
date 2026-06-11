@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { WorkGrid } from "@/components/WorkGrid";
 import { Footer } from "@/components/Footer";
 import { Reveal } from "@/components/Reveal";
+import { RailSection } from "@/components/Rail";
 import { projects } from "@/content";
 
 export const metadata: Metadata = {
@@ -12,16 +13,20 @@ export const metadata: Metadata = {
 export default function WorkPage() {
   return (
     <>
-      <main className="min-h-screen px-[var(--margin-page)] pb-28 pt-32">
-        <header className="mb-16 flex flex-wrap items-end justify-between gap-6 border-b border-hairline pb-8">
+      <main className="min-h-screen pb-28 pt-32">
+        <RailSection
+          rail={<p className="margin-note">Travaux, sélection</p>}
+          railClassName="pb-10 pt-2"
+          bodyClassName="pb-14"
+        >
           <Reveal>
-            <h1 className="display text-[clamp(2.6rem,9vw,8rem)]">Travaux</h1>
+            <h1 className="display text-[clamp(2.6rem,8vw,7rem)]">Travaux</h1>
           </Reveal>
-          <p className="margin-note max-w-xs leading-relaxed">
+          <p className="mt-6 max-w-md text-base leading-relaxed text-paper/75">
             Une sélection, l’image et le son traités d’un même geste.
-            Survolez pour prévisualiser.
+            <span className="hover-hint"> Survolez pour prévisualiser.</span>
           </p>
-        </header>
+        </RailSection>
 
         <WorkGrid projects={projects} />
       </main>

@@ -5,7 +5,6 @@ import { HeroMedia, type SonTrack } from "./HeroMedia";
 import { MediaScrubber } from "./MediaScrubber";
 import { BottomStrip } from "./BottomStrip";
 import { Manifesto } from "./Manifesto";
-import { Timecode } from "./Timecode";
 import { useMode } from "./ModeContext";
 import type { Project } from "@/content/types";
 
@@ -58,12 +57,6 @@ function Stage({
           son={son}
           sonHeading={copy.sonHeading}
         />
-
-        {/* top-right running timecode (UI honesty) */}
-        <div className="absolute right-[var(--margin-page)] top-24 z-20 hidden text-right md:block">
-          <Timecode className="text-paper/70" />
-          <p className="margin-note mt-1">REC · 25 FPS</p>
-        </div>
 
         {/* manifesto */}
         <div className="absolute bottom-44 left-[var(--margin-page)] z-20">
