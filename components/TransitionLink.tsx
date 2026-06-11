@@ -22,15 +22,23 @@ export function TransitionLink({ href, onClick, ...rest }: Props) {
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
 
     const doc = document as Document & {
-      startViewTransition?: (cb: () => void) => void;
+      startViewTransition?: (cb: () => void) => {
+        finished: Promise<void>;
+        ready: Promise<void>;
+        updateCallbackDone: Promise<void>;
+      };
     };
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (!doc.startViewTransition || reduce) return; // let <Link> navigate normally
 
     e.preventDefault();
-    doc.startViewTransition(() => {
+    const vt = doc.startViewTransition(() => {
       router.push(typeof href === "string" ? href : href.toString());
     });
+    // aborted transitions (hidden tab, rapid navigation) are fine
+    vt.ready.catch(() => {});
+    vt.updateCallbackDone.catch(() => {});
+    vt.finished.catch(() => {});
   };
 
   return <Link href={href} onClick={handle} {...rest} />;

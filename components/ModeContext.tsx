@@ -51,7 +51,11 @@ export function ModeProvider({
 
     // the re-print: the page re-inks itself behind a left-to-right wipe
     const doc = document as Document & {
-      startViewTransition?: (cb: () => void) => { finished: Promise<void> };
+      startViewTransition?: (cb: () => void) => {
+        finished: Promise<void>;
+        ready: Promise<void>;
+        updateCallbackDone: Promise<void>;
+      };
     };
     const reduce = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
@@ -59,11 +63,14 @@ export function ModeProvider({
     if (doc.startViewTransition && !reduce) {
       document.documentElement.classList.add("mode-reprint");
       const vt = doc.startViewTransition(apply);
+      // aborted transitions (hidden tab, rapid toggling) are fine —
+      // every promise of the transition must be marked handled
+      vt.ready.catch(() => {});
+      vt.updateCallbackDone.catch(() => {});
       vt.finished
         .finally(() =>
           document.documentElement.classList.remove("mode-reprint"),
         )
-        // aborted transitions (hidden tab, rapid toggling) are fine
         .catch(() => {});
     } else {
       apply();

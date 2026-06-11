@@ -52,28 +52,52 @@ public/equipe/            crew portraits   public/audio, public/work  media
 
 ## Design system (current)
 
-In `app/globals.css` via Tailwind v4 `@theme`:
+The visual thesis is **« le son habite la marge de l'image »** — on a 35mm
+print the optical soundtrack literally lives in the margin of the image. The
+site is art-directed as an **annotated working print**: media and statements
+in the body, every piece of metadata in a visible margin rail, paper surfaces
+as the second register, accent used only as annotation ink.
 
-- Palette: `--color-ink #0a0a0a`, `--color-paper #f2f0eb`,
-  `--color-paper-dim #9a988f`, `--color-hairline #2a2a28`
-- Accent: `--accent` driven by mode — IMAGE `#3b6dff` (blue), SON `#ffae2b` (amber)
-- `--margin-page: clamp(1.5rem, 5.5vw, 7rem)` — the "thousand margins" gutter system
-- Type: `.display` (variable Bricolage, hover weight sweep), `.margin-note`
-  (mono uppercase metadata)
-- Overlays: `.grain` (animated feTurbulence), `.vignette` (gate), custom cursor
-  (ring + dot + contextual label), `.reveal` scroll-in, View-Transition CSS
+In `app/globals.css` via Tailwind v4 `@theme inline`:
+
+- Palette routed through **runtime vars** `--ink/--paper/--paper-dim/--hairline`
+  (mapped to `--color-*` in `@theme inline` so utilities resolve per element).
+  `.surface-paper` inverts them in scope — any component dropped inside
+  re-inks itself (used by the Footer, Studio philosophy band, project
+  description section).
+- Accent: `--accent` driven by mode — IMAGE `#3b6dff` (blue), SON `#ffae2b`
+  (amber). **Annotation-ink discipline**: accent underlines, ticks, dashes,
+  marks and the single italic "margin word" of a statement — it never fills
+  buttons or large type.
+- **The margin rail**: `--rail-w`, `--rail-gap`, `.rail-section/.rail-cell`
+  grid + the `RailSection` component (`components/Rail.tsx`). Sections stack
+  flush so the hairline reads as one continuous rule. On mobile the rail
+  collapses to an annotation row.
+- Type ramp (four registers, no more): `.display` (calm wght 280),
+  `.title` (firm wght 560), body (Bricolage 400 via Tailwind), `.margin-note`
+  (mono uppercase, strictly marginalia). The variable-weight hover sweep is
+  opt-in via `.sweep` and exists ONLY on the Équipe name block.
+- Overlays: `.grain` (animated feTurbulence), `.vignette` (now a whisper —
+  do not strengthen it, it fights the paper surfaces), custom cursor,
+  `.reveal` scroll-in, View-Transition CSS + the `.mode-reprint` wipe.
+- `.hover-hint` hides pointer-only copy on touch devices.
 - Full `prefers-reduced-motion` fallbacks everywhere
 
 ## Signature components
 
+- **`RailSection`** — the annotated-page stripe (margin rail + body). Every
+  page is built from stacked RailSections; keep new sections on this grid.
 - **`ModeContext`** — global IMAGE/SON state, injects `--accent`, persists to
-  `localStorage`.
+  `localStorage`. Mode switches run as a "re-print": a left-to-right clip
+  wipe via the View Transitions API (`.mode-reprint`), skipped under
+  reduced-motion; all transition promises are caught (aborts are normal).
 - **`HomeStage` / `HeroMedia`** — mode-branched, cross-fading hero. IMAGE = muted
   showreel video; SON = `Waveform`.
-- **`Waveform` + `TransportContext`** — Web-Audio waveform that doubles as the
-  seek bar. Precomputed peaks draw instantly; `AnalyserNode` reacts on play;
-  supports a `startAt` offset (e.g. "20 pierres" begins at 9:35). Shared
-  transport keeps position aligned across a mode toggle.
+- **`Waveform` + `TransportContext`** — the optical track: Web-Audio waveform
+  drawn on a ruled baseline with a time ruler (minor/15 s, major/60 s), the
+  `startAt` edit point flagged in accent ink, and an accent playhead. Doubles
+  as the seek bar; precomputed peaks draw instantly; `AnalyserNode` reacts on
+  play. Shared transport keeps position aligned across a mode toggle.
 - **`CrewIndex`** — anorak-style justified name block; hover/focus floats a
   portrait, dims the rest, reveals roles + skills; emphasises crew by MODE;
   reduced-motion → plain grid.
@@ -98,34 +122,31 @@ In `app/globals.css` via Tailwind v4 `@theme`:
 - **Copy** (`content/copy.ts`): manifesto, studio philosophy, services, contact,
   socials, accents — all editable here. Based in Marseille.
 
-## What "professional / artistic vision" should tackle
+## Design-elevation status (June 2026)
 
-The current site is a competent, cinematic **template**. To make it feel like a
-real studio's site with a genuine point of view, consider (audit first, then
-choose a direction — don't do all of it blindly):
+The "annotated working print" direction is implemented (see Design system
+above): margin rail on every page, four-register type ramp, paper surfaces,
+accent-as-annotation-ink, the waveform as optical track, and the IMAGE ⇄ SON
+"re-print" wipe. Done in four commits — rail/type, paper/accent, waveform/
+transition, detail polish.
 
-1. **Art direction & identity.** It currently leans on generic "cinematic dark"
-   tropes. Define an actual visual thesis for "1000 marges" — what does *margin*
-   look like as a design language? Push the gutter/annotation system, the
-   IMAGE/SON duality, the typographic voice. Make choices that a template wouldn't.
-2. **Typography.** Hierarchy, scale ramp, optical sizing, line-length, the
-   FR-language rhythm. The huge `.display` + mono `.margin-note` pairing is a
-   start; refine into a real type system.
-3. **Layout & grid.** The "thousand margins" idea deserves a rigorous,
-   intentional grid — asymmetry with purpose, not just `px-[var(--margin-page)]`.
-4. **Motion choreography.** GSAP/Lenis are wired but motion is sparse and a bit
-   generic. Design entrances, scroll-linked moments, and the mode-switch as a
-   crafted transition. Keep reduced-motion parity.
-5. **Color.** Two accents (blue/amber) + near-black/paper. Decide if that's the
-   identity or if it needs a more distinctive palette/treatment.
-6. **Photography & media treatment.** Grayscale-on-default with colour-on-hover
-   is used everywhere — make it intentional, consistent, and considered. The
-   crew portraits vary in quality/crop.
-7. **The hero & the waveform.** The SON waveform is the signature — make it
-   genuinely beautiful, not just functional. Same for the IMAGE showreel hero.
-8. **Detail polish.** Cursor, grain intensity, hairlines, focus states,
-   empty/loading states, favicon + OG image (currently default), mobile.
-9. **Coherence.** Make every page feel like one art-directed object.
+Worth tackling next (in rough priority):
+
+1. **Photography treatment.** The grayscale-default/colour-on-hover motif is
+   consistent, but the four real portraits still differ wildly in grade and
+   crop — define one printed look (soft grayscale, slight warm lift, fixed
+   crops) and bake it into the assets or a CSS filter recipe.
+2. **Motion depth.** Entrances are reveals + the manifesto bleed; the next
+   layer is "annotation being made": hairlines drawing in, margin notes
+   stamping, one scroll-linked moment per page. Keep reduced-motion parity.
+3. **OG/share image** (`docs/screenshots/og-image.png` + the generated route)
+   still shows the old art direction — regenerate.
+4. **docs/screenshots baseline** still shows the pre-rail design — re-shoot.
+5. **Demo content** (5 sample projects, 8 placeholder collaborators with
+   picsum portraits): replace with real work as it lands, or give
+   placeholders an honest « à venir » margin-note treatment.
+6. **Mobile menu / nav** could become a full-screen annotated index rather
+   than a dropdown.
 
 ## Working agreements (keep these intact)
 
