@@ -39,7 +39,7 @@ export const crew: Member[] = [
     slug: "arthur-boval",
     name: "Arthur Boval",
     roles: ["compositeur"],
-    portrait: "/equipe/arthur-boval.png",
+    portrait: "/equipe/arthur-boval.jpg",
     bio: "Compositeur. Il écrit la musique à l'image et le design sonore, à la lisière entre la note et le bruit.",
     skills: ["Composition", "Sound design", "Synthèse modulaire", "Ableton Live"],
     order: 4,
