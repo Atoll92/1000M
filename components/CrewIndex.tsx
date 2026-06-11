@@ -34,9 +34,13 @@ export function CrewIndex({ members }: { members: Member[] }) {
       pos.current.x += (target.current.x - pos.current.x) * 0.14;
       pos.current.y += (target.current.y - pos.current.y) * 0.14;
       if (portrait.current) {
-        portrait.current.style.transform = `translate(${pos.current.x + 28}px, ${
-          pos.current.y - 130
-        }px)`;
+        // keep the floating portrait fully on screen (clear of the nav)
+        const x = Math.min(pos.current.x + 28, window.innerWidth - 200);
+        const y = Math.min(
+          Math.max(pos.current.y - 130, 88),
+          window.innerHeight - 272,
+        );
+        portrait.current.style.transform = `translate(${x}px, ${y}px)`;
       }
       raf.current = requestAnimationFrame(loop);
     };
@@ -88,7 +92,7 @@ export function CrewIndex({ members }: { members: Member[] }) {
           <img
             src={active.portrait}
             alt=""
-            className="h-full w-full object-cover grayscale [transition:filter_.4s] hover:grayscale-0"
+            className="h-full w-full object-cover grayscale"
           />
         )}
       </div>
@@ -134,7 +138,7 @@ export function CrewIndex({ members }: { members: Member[] }) {
 
       {/* corner panel, roles + skills of the active member */}
       <div
-        className={`pointer-events-none fixed bottom-28 right-[var(--margin-page)] z-30 hidden w-64 border-t border-hairline pt-3 transition-opacity duration-300 md:block ${
+        className={`pointer-events-none fixed bottom-10 right-[var(--margin-page)] z-30 hidden w-64 border border-hairline bg-ink/90 p-4 backdrop-blur-sm transition-opacity duration-300 md:block ${
           active ? "opacity-100" : "opacity-0"
         }`}
       >

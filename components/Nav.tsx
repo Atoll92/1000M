@@ -31,7 +31,7 @@ export function Nav() {
         <Link
           href="/"
           data-cursor-label="Accueil"
-          className="font-mono text-sm font-bold leading-none tracking-[0.3em] transition-opacity hover:opacity-70"
+          className="font-mono text-xs font-bold leading-none tracking-[0.18em] transition-opacity hover:opacity-70 sm:text-sm sm:tracking-[0.3em]"
         >
           1000
           <span className="text-paper/40">&nbsp;/&nbsp;</span>

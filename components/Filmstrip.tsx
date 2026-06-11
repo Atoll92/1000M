@@ -57,6 +57,17 @@ export function Filmstrip({ items }: { items: Project[] }) {
           </TransitionLink>
         );
       })}
+
+      {/* the strip signs off with the index — no dead end of black */}
+      <TransitionLink
+        href="/work"
+        data-cursor-label="Index"
+        className="group flex h-full min-w-40 flex-1 items-center justify-center border-l border-hairline"
+      >
+        <span className="margin-note transition-colors group-hover:text-paper">
+          Tous les travaux →
+        </span>
+      </TransitionLink>
     </div>
   );
 }
