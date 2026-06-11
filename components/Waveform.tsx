@@ -72,24 +72,58 @@ export function Waveform({
 
       const n = peaks.length;
       const bw = w / n;
-      const mid = h / 2;
+      const rulerH = 14; // reserved strip under the track for the ruler
+      const trackH = h - rulerH;
+      const mid = trackH / 2;
       const acc = accent();
       const boost = 1 + level.current * 0.4; // live amplitude reaction
 
+      // the optical track: a ruled baseline the sound is printed on
+      ctx.fillStyle = "rgba(242,240,235,0.16)";
+      ctx.fillRect(0, mid, w, 1);
+
       for (let i = 0; i < n; i++) {
         const played = i / n < p;
-        const amp = Math.max(2, peaks[i] * (h * 0.46) * (played ? boost : 1));
-        ctx.fillStyle = played ? acc : "rgba(242,240,235,0.22)";
-        ctx.fillRect(i * bw + bw * 0.15, mid - amp, bw * 0.7, amp * 2);
+        const amp = Math.max(1.5, peaks[i] * (trackH * 0.46) * (played ? boost : 1));
+        ctx.fillStyle = played ? acc : "rgba(242,240,235,0.26)";
+        ctx.fillRect(i * bw + bw * 0.22, mid - amp, bw * 0.56, amp * 2);
       }
 
-      // hover playhead
+      // time ruler: minor tick / 15 s, major / 60 s
+      if (duration > 0) {
+        const px = (s: number) => (s / duration) * w;
+        ctx.fillStyle = "rgba(242,240,235,0.3)";
+        for (let s = 0; s <= duration; s += 15) {
+          const major = s % 60 === 0;
+          ctx.fillRect(px(s), h - (major ? 9 : 5), 1, major ? 9 : 5);
+        }
+        // the edit point — where the piece begins on first play
+        if (startAt > 0) {
+          const x = px(startAt);
+          ctx.fillStyle = acc;
+          ctx.fillRect(x, 0, 1, h);
+          ctx.beginPath();
+          ctx.moveTo(x, 0);
+          ctx.lineTo(x + 6, 0);
+          ctx.lineTo(x, 7);
+          ctx.closePath();
+          ctx.fill();
+        }
+      }
+
+      // playhead — printed in accent ink
+      if (p > 0) {
+        ctx.fillStyle = acc;
+        ctx.fillRect(p * w, 0, 1, trackH);
+      }
+
+      // hover ghost
       if (hoverX != null) {
-        ctx.fillStyle = "rgba(242,240,235,0.6)";
-        ctx.fillRect(hoverX, 0, 1, h);
+        ctx.fillStyle = "rgba(242,240,235,0.55)";
+        ctx.fillRect(hoverX, 0, 1, trackH);
       }
     },
-    [peaks, hoverX],
+    [peaks, hoverX, duration, startAt],
   );
 
   // redraw on progress / hover / mode-accent changes

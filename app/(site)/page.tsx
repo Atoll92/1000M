@@ -26,7 +26,10 @@ export default function HomePage() {
         lead: home.manifestoLead,
         accent: home.manifestoAccent,
         sub: home.manifestoSub,
-        sonHeading: home.sonHeading,
+        sonHeading: {
+          lead: home.sonHeadingLead,
+          accent: home.sonHeadingAccent,
+        },
       }}
     />
   );

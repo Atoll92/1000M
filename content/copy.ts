@@ -23,7 +23,8 @@ export const home = {
   manifestoAccent: "sans marges.",
   manifestoSub:
     "Société de production, cadreurs, ingénieurs du son, chefs op, compositeurs, monteurs, étalonneurs.",
-  sonHeading: "Écoutez la marge.",
+  sonHeadingLead: "Écoutez",
+  sonHeadingAccent: "la marge.",
 };
 
 export const studio = {

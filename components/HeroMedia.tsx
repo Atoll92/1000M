@@ -14,7 +14,8 @@ export interface SonTrack {
 /**
  * Full-bleed hero that cross-fades with MODE:
  *   IMAGE → looping muted showreel (poster-first, transport-bound)
- *   SON   → animated Web-Audio waveform that doubles as the seek bar
+ *   SON   → the optical track: a Web-Audio waveform printed like the
+ *           soundtrack in the margin of a 35mm print, doubling as seek bar
  * Both layers stay mounted so toggling is an opacity cross-fade, not a remount.
  */
 export function HeroMedia({
@@ -26,7 +27,7 @@ export function HeroMedia({
   video?: string;
   poster?: string;
   son?: SonTrack;
-  sonHeading?: string;
+  sonHeading?: { lead: string; accent: string };
 }) {
   const { mode } = useMode();
   const isImage = mode === "image";
@@ -50,19 +51,19 @@ export function HeroMedia({
         <div className="absolute inset-0 bg-ink/40 mix-blend-multiply" />
       </div>
 
-      {/* SON layer */}
+      {/* SON layer — the track sits in the upper field, clear of the manifesto */}
       <div
-        className={`absolute inset-0 flex flex-col items-center justify-center bg-ink px-[var(--margin-page)] transition-opacity duration-700 ${
+        className={`absolute inset-0 flex flex-col items-center justify-center bg-ink px-[var(--margin-page)] pb-[26vh] transition-opacity duration-700 ${
           isImage ? "pointer-events-none opacity-0" : "opacity-100"
         }`}
         aria-hidden={isImage}
       >
         {sonHeading && (
-          <p
-            className="display mb-10 text-center text-[clamp(1.8rem,5vw,3.5rem)]"
-            style={{ color: "var(--accent)" }}
-          >
-            {sonHeading}
+          <p className="display mb-10 text-center text-[clamp(1.8rem,4.5vw,3.2rem)]">
+            {sonHeading.lead}{" "}
+            <span className="italic" style={{ color: "var(--accent)" }}>
+              {sonHeading.accent}
+            </span>
           </p>
         )}
         {son && (
@@ -71,7 +72,7 @@ export function HeroMedia({
             peaks={son.peaks}
             title={son.title}
             startAt={son.startAt}
-            height={200}
+            height={180}
             active={!isImage}
             className="max-w-4xl"
           />

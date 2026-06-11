@@ -277,6 +277,19 @@ html.lenis body { height: auto; }
   animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+/* IMAGE ⇄ SON: the page "re-prints" — the new ink wipes across along a
+   clean vertical edge while the old print holds underneath. */
+.mode-reprint::view-transition-old(root) {
+  animation: none;
+}
+.mode-reprint::view-transition-new(root) {
+  animation: mode-reprint 640ms cubic-bezier(0.65, 0, 0.35, 1) both;
+}
+@keyframes mode-reprint {
+  from { clip-path: inset(0 100% 0 0); }
+  to   { clip-path: inset(0 0 0 0); }
+}
+
 /* ------------------------------------------------------------------ *
  *  Reveal animations (also the reduced-motion / no-JS fallback)
  * ------------------------------------------------------------------ */

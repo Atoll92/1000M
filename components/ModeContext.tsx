@@ -47,7 +47,28 @@ export function ModeProvider({
   }, []);
 
   const setMode = useCallback((m: Mode) => {
-    setModeState(m);
+    const apply = () => setModeState(m);
+
+    // the re-print: the page re-inks itself behind a left-to-right wipe
+    const doc = document as Document & {
+      startViewTransition?: (cb: () => void) => { finished: Promise<void> };
+    };
+    const reduce = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    if (doc.startViewTransition && !reduce) {
+      document.documentElement.classList.add("mode-reprint");
+      const vt = doc.startViewTransition(apply);
+      vt.finished
+        .finally(() =>
+          document.documentElement.classList.remove("mode-reprint"),
+        )
+        // aborted transitions (hidden tab, rapid toggling) are fine
+        .catch(() => {});
+    } else {
+      apply();
+    }
+
     try {
       window.localStorage.setItem(STORAGE_KEY, m);
     } catch {

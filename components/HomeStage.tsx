@@ -23,7 +23,7 @@ export function HomeStage({
     lead: string;
     accent: string;
     sub: string;
-    sonHeading: string;
+    sonHeading: { lead: string; accent: string };
   };
 }) {
   return (
@@ -44,7 +44,7 @@ function Stage({
   poster?: string;
   son?: SonTrack;
   featured: Project[];
-  copy: { lead: string; accent: string; sub: string; sonHeading: string };
+  copy: { lead: string; accent: string; sub: string; sonHeading: { lead: string; accent: string } };
 }) {
   const { mode } = useMode();
 
