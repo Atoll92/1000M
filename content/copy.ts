@@ -7,7 +7,7 @@ export const site = {
   /** hardcoded fallback for the gated Sanity siteTitle smoke-test */
   title: "1000 marges",
   tagline: "Image & Son",
-  base: "Paris, FR",
+  base: "Marseille, FR",
   email: "bonjour@1000marges.fr",
   /** accent per mode — consumed by <ModeProvider> */
   accent: { image: "#3b6dff", son: "#ffae2b" },
