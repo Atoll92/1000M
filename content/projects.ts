@@ -49,7 +49,7 @@ export const projects: Project[] = [
       { memberSlug: "valentin-leverrier", roleId: "ingeson" },
     ],
     description:
-      "20 pierres est une performance conçue par Laura Vazquez et Élise Blotière, articulée en deux temps : la projection du film Pietre, réalisé par Élise Blotière, suivie d'une lecture performée par Laura Vazquez. Présentée à l'Odéon, Théâtre de l'Europe, à la Villa Médicis (Rome) et à La Criée (Marseille).",
+      "20 pierres est une performance conçue par Laura Vazquez et Élise Blotière, articulée en deux temps : la projection du film Pietre, réalisé par Élise Blotière, suivie d'une lecture performée par Laura Vazquez. Musique originale par Arthur Boval, mixage & mastering par Valentin Leverrier. Présentée à l'Odéon, Théâtre de l'Europe, à la Villa Médicis (Rome) et à La Criée théatrate national (Marseille). 2026.",
     link: "https://villamedici.it/programme/20-pierres/",
     linkLabel: "Villa Médicis, programme",
     featured: true,
