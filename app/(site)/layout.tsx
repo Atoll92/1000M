@@ -3,7 +3,7 @@ import { Cursor } from "@/components/Cursor";
 import { SmoothScroll } from "@/components/SmoothScroll";
 
 /**
- * Site shell — everything except the embedded Studio (/admin) lives here.
+ * Site shell, everything except the embedded Studio (/admin) lives here.
  * Mounts the smooth-scroll engine, the cinematic overlays (grain + gate
  * vignette), the custom cursor and the fixed navigation.
  */

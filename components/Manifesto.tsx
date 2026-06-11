@@ -25,7 +25,7 @@ export function Manifesto({
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
       // gsap.from animates FROM hidden TO the natural (visible) state, so the
-      // resting state is always visible — if the tween never runs, nothing is
+      // resting state is always visible, if the tween never runs, nothing is
       // stuck at opacity 0.
       gsap.from("[data-bleed]", {
         opacity: 0,

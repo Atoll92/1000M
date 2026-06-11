@@ -6,7 +6,7 @@ import { projects } from "@/content";
 
 export const metadata: Metadata = {
   title: "Travaux",
-  description: "Films, clips, documentaires, captations — image et son.",
+  description: "Films, clips, documentaires, captations, image et son.",
 };
 
 export default function WorkPage() {
@@ -18,7 +18,7 @@ export default function WorkPage() {
             <h1 className="display text-[clamp(2.6rem,9vw,8rem)]">Travaux</h1>
           </Reveal>
           <p className="margin-note max-w-xs leading-relaxed">
-            Une sélection — l’image et le son traités d’un même geste.
+            Une sélection, l’image et le son traités d’un même geste.
             Survolez pour prévisualiser.
           </p>
         </header>

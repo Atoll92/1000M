@@ -24,7 +24,7 @@ export async function generateMetadata({
   const { slug } = await params;
   const m = memberBySlug(slug);
   if (!m) return {};
-  return { title: m.name, description: `${m.name} — ${roleLabel(m)}` };
+  return { title: m.name, description: `${m.name}, ${roleLabel(m)}` };
 }
 
 export default async function MemberPage({
@@ -133,7 +133,7 @@ export default async function MemberPage({
           </section>
         ) : null}
 
-        {/* prev / next member — filmstrip style */}
+        {/* prev / next member, filmstrip style */}
         <nav className="mt-20 grid grid-cols-2 gap-px border-t border-hairline">
           {[
             { m: prev, label: "← Précédent" },

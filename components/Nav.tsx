@@ -23,7 +23,7 @@ export function Nav() {
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 text-paper">
-      {/* legibility scrim — keeps the nav readable over any hero media */}
+      {/* legibility scrim, keeps the nav readable over any hero media */}
       <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-ink/80 via-ink/30 to-transparent" />
 
       <div className="flex items-center justify-between px-[var(--margin-page)] py-5">

@@ -51,7 +51,7 @@ export function ModeProvider({
     try {
       window.localStorage.setItem(STORAGE_KEY, m);
     } catch {
-      /* private mode — ignore */
+      /* private mode, ignore */
     }
   }, []);
 

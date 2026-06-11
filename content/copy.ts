@@ -9,7 +9,7 @@ export const site = {
   tagline: "Image & Son",
   base: "Marseille, FR",
   email: "bonjour@1000marges.fr",
-  /** accent per mode — consumed by <ModeProvider> */
+  /** accent per mode, consumed by <ModeProvider> */
   accent: { image: "#3b6dff", son: "#ffae2b" },
   socials: [
     { label: "Instagram", url: "https://instagram.com" },
@@ -22,14 +22,14 @@ export const home = {
   manifestoLead: "L’image et le son,",
   manifestoAccent: "sans marges.",
   manifestoSub:
-    "Société de production — cadreurs, ingénieurs du son, chefs op, compositeurs, monteurs, étalonneurs.",
+    "Société de production, cadreurs, ingénieurs du son, chefs op, compositeurs, monteurs, étalonneurs.",
   sonHeading: "Écoutez la marge.",
 };
 
 export const studio = {
-  kicker: "À propos — 1000 marges",
+  kicker: "À propos, 1000 marges",
   manifesto:
-    "Une société de production qui travaille les marges — celles de l’image et celles du son — comme un seul geste.",
+    "Une société de production qui travaille les marges, celles de l’image et celles du son, comme un seul geste.",
   philosophy: [
     {
       heading: "Deux artisanats, une grammaire",
@@ -41,7 +41,7 @@ export const studio = {
     },
     {
       heading: "Petit collectif, grands formats",
-      body: "Cadreurs, ingénieurs du son, compositeurs, monteurs, étalonneurs — un réseau resserré d’artisans qui se choisissent projet par projet.",
+      body: "Cadreurs, ingénieurs du son, compositeurs, monteurs, étalonneurs, un réseau resserré d’artisans qui se choisissent projet par projet.",
     },
   ],
   services: [
@@ -53,7 +53,7 @@ export const studio = {
 };
 
 export const contact = {
-  kicker: "Contact — 1000 marges",
+  kicker: "Contact, 1000 marges",
   leadA: "Un projet d’image,",
   leadB: "de son,",
   leadAccent: "ou les deux ?",

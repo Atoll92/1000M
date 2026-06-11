@@ -22,9 +22,9 @@ export async function generateMetadata(): Promise<Metadata> {
   // gated Sanity smoke-test; falls back to the static title
   const title = await getSiteTitle();
   const description =
-    "Société de production — image et son. Cadreurs, ingénieurs du son, chefs op, compositeurs.";
+    "Société de production, image et son. Cadreurs, ingénieurs du son, chefs op, compositeurs.";
   return {
-    title: { default: `${title} — ${site.tagline}`, template: `%s — ${title}` },
+    title: { default: `${title}, ${site.tagline}`, template: `%s, ${title}` },
     description,
     metadataBase: new URL("https://1000marges.fr"),
     openGraph: { title, description, locale: "fr_FR", type: "website" },

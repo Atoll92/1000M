@@ -5,7 +5,7 @@ import { contact, site } from "@/content/copy";
 
 export const metadata: Metadata = {
   title: "Contact",
-  description: "Parlons de votre projet — image, son, ou les deux.",
+  description: "Parlons de votre projet, image, son, ou les deux.",
 };
 
 export default function ContactPage() {

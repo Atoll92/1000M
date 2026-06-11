@@ -29,7 +29,7 @@ export async function generateMetadata({
   if (!p) return {};
   return {
     title: p.title,
-    description: `${p.title} — ${p.client ?? ""} ${p.year}`.trim(),
+    description: `${p.title}, ${p.client ?? ""} ${p.year}`.trim(),
   };
 }
 

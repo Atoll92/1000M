@@ -26,7 +26,7 @@ export function Waveform({
   height?: number;
   /** when false (e.g. hidden hero layer), don't claim the shared seek */
   active?: boolean;
-  /** seconds — playback begins here the first time the user presses play */
+  /** seconds, playback begins here the first time the user presses play */
   startAt?: number;
   className?: string;
 }) {
@@ -148,7 +148,7 @@ export function Waveform({
       analyser.current = an;
       freq.current = new Uint8Array(new ArrayBuffer(an.frequencyBinCount));
     } catch {
-      // cross-origin without CORS audio taints the graph — play still works,
+      // cross-origin without CORS audio taints the graph, play still works,
       // we just skip live amplitude reactivity.
       analyser.current = null;
     }
@@ -219,7 +219,7 @@ export function Waveform({
         ref={wrap}
         role="slider"
         tabIndex={0}
-        aria-label="Barre de lecture — cliquez pour naviguer dans la piste"
+        aria-label="Barre de lecture, cliquez pour naviguer dans la piste"
         aria-valuemin={0}
         aria-valuemax={100}
         aria-valuenow={Math.round(progress * 100)}

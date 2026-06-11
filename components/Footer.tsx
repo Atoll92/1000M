@@ -45,7 +45,7 @@ export function Footer() {
       <div className="mt-12 flex items-center justify-between border-t border-hairline pt-4">
         <span className="margin-note">© {new Date().getFullYear()} {site.title}</span>
         <span className="margin-note">
-          {site.tagline} — {site.base}
+          {site.tagline}, {site.base}
         </span>
       </div>
     </footer>

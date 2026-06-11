@@ -6,7 +6,7 @@ import { studio } from "@/content/copy";
 export const metadata: Metadata = {
   title: "Studio",
   description:
-    "La philosophie « 1000 marges » — l’image et le son pensés d’un même geste.",
+    "La philosophie « 1000 marges », l’image et le son pensés d’un même geste.",
 };
 
 const catLabel: Record<string, string> = {

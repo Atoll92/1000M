@@ -1,7 +1,7 @@
 import type { Member } from "./types";
 
 /**
- * Portraits point at remote stills so the demo renders — replace each
+ * Portraits point at remote stills so the demo renders, replace each
  * `portrait` with a local `/equipe/<slug>.jpg` in /public (real photos).
  */
 const portrait = (seed: string) =>
@@ -31,7 +31,7 @@ export const crew: Member[] = [
     name: "Damien Desmier",
     roles: ["monteur", "cadreur"],
     portrait: "/equipe/damien-desmier.webp",
-    bio: "Monteur et cadreur. Il pense le rythme dès le tournage — le cadre et le montage comme un seul mouvement.",
+    bio: "Monteur et cadreur. Il pense le rythme dès le tournage, le cadre et le montage comme un seul mouvement.",
     skills: ["Montage", "Cadre", "DaVinci Resolve", "Découpage"],
     order: 3,
   },
@@ -45,13 +45,13 @@ export const crew: Member[] = [
     order: 4,
   },
 
-  /* — collaborateurs — */
+  /*, collaborateurs, */
   {
     slug: "camille-roussel",
     name: "Camille Roussel",
     roles: ["chefop", "cadreur"],
     portrait: portrait("crew-camille"),
-    bio: "Chef opératrice et cadreuse. Quinze ans de plateau, de la fiction au documentaire. Elle cherche la lumière qui déborde — celle qui laisse une marge à l'accident.",
+    bio: "Chef opératrice et cadreuse. Quinze ans de plateau, de la fiction au documentaire. Elle cherche la lumière qui déborde, celle qui laisse une marge à l'accident.",
     bioEn: "Director of photography and camera operator. Fifteen years on set, from fiction to documentary.",
     skills: ["Arri Alexa 35", "Steadicam", "Lumière naturelle", "Anamorphique"],
     order: 5,
@@ -97,7 +97,7 @@ export const crew: Member[] = [
     name: "Margaux Lefèvre",
     roles: ["etalonneur"],
     portrait: portrait("crew-margaux"),
-    bio: "Étalonneuse. Le dernier geste sur l'image — celui qui décide de la température d'un souvenir.",
+    bio: "Étalonneuse. Le dernier geste sur l'image, celui qui décide de la température d'un souvenir.",
     skills: ["Étalonnage", "Look dev", "HDR", "Baselight"],
     order: 10,
   },

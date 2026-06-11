@@ -33,7 +33,7 @@ export function VideoMedia({
   const ref = useRef<HTMLVideoElement>(null);
   const [reduce, setReduce] = useState(false);
 
-  // transport is optional — null when rendered outside the hero provider
+  // transport is optional, null when rendered outside the hero provider
   const transport = useTransportOptional();
 
   useEffect(() => {

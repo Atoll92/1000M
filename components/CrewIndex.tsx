@@ -132,7 +132,7 @@ export function CrewIndex({ members }: { members: Member[] }) {
         })}
       </h1>
 
-      {/* corner panel — roles + skills of the active member */}
+      {/* corner panel, roles + skills of the active member */}
       <div
         className={`pointer-events-none fixed bottom-28 right-[var(--margin-page)] z-30 hidden w-64 border-t border-hairline pt-3 transition-opacity duration-300 md:block ${
           active ? "opacity-100" : "opacity-0"

@@ -3,7 +3,7 @@ import Link from "next/link";
 export default function NotFound() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-6 px-6 text-center">
-      <p className="margin-note">Erreur 404 — hors-champ</p>
+      <p className="margin-note">Erreur 404, hors-champ</p>
       <h1 className="display text-[clamp(3rem,12vw,9rem)]">
         Hors&nbsp;
         <span className="italic" style={{ color: "var(--accent)" }}>
