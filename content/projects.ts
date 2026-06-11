@@ -33,10 +33,11 @@ export const projects: Project[] = [
   {
     slug: "20-pierres",
     title: "20 pierres",
-    client: "Création",
+    client: "Laura Vazquez & Élise Blotière",
     year: "2024",
     category: "son",
-    poster: POSTER("marges-basse"),
+    // still du film « Pietre » © Élise Blotière
+    poster: "/work/20-pierres.jpg",
     audio: "/audio/20-pierres.mp3",
     audioTitle: "20 pierres",
     audioStartAt: 575, // commence à 9:35
@@ -48,7 +49,7 @@ export const projects: Project[] = [
       { memberSlug: "valentin-leverrier", roleId: "ingeson" },
     ],
     description:
-      "Pièce sonore. À l'écoute, la lecture démarre sur le passage à 9:35 — le cœur du morceau.",
+      "20 pierres est une performance conçue par Laura Vazquez et Élise Blotière, articulée en deux temps : la projection du film Pietre, réalisé par Élise Blotière, suivie d'une lecture performée par Laura Vazquez. Présentée à l'Odéon — Théâtre de l'Europe, à la Villa Médicis (Rome) et à La Criée (Marseille).",
     featured: true,
     order: 2,
   },
