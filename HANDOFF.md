@@ -147,6 +147,10 @@ npm run dev          # http://localhost:3000  (no env needed; fully static)
 npx tsc --noEmit && npm run build   # must stay clean
 ```
 
+A visual baseline of the current state is in **`docs/screenshots/`** (both
+modes, plus the generated OG card) — use it to anchor your critique, then
+re-shoot as you go.
+
 Recommended first move: **run the site, screenshot every page in both IMAGE and
 SON modes, write a short art-direction critique + a proposed design direction,
 then implement iteratively** — don't start editing before there's a thesis.
