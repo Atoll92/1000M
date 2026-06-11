@@ -44,8 +44,8 @@ export const projects: Project[] = [
     runtime: "13:14",
     gear: "Prise de son directe · mixage",
     credits: [
-      { memberSlug: "idriss-benali", roleId: "ingeson" },
-      { memberSlug: "salome-vidal", roleId: "compositeur" },
+      { memberSlug: "arthur-boval", roleId: "compositeur" },
+      { memberSlug: "valentin-leverrier", roleId: "ingeson" },
     ],
     description:
       "Pièce sonore. À l'écoute, la lecture démarre sur le passage à 9:35 — le cœur du morceau.",
