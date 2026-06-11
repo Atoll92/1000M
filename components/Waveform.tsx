@@ -18,6 +18,7 @@ export function Waveform({
   height = 160,
   active = true,
   startAt = 0,
+  autoPlayOnActive = false,
   className = "",
 }: {
   src: string;
@@ -28,6 +29,10 @@ export function Waveform({
   active?: boolean;
   /** seconds, playback begins here the first time the user presses play */
   startAt?: number;
+  /** start playback (from the cue) the first time `active` flips true —
+   *  rides the user activation of the mode toggle; a rejected play()
+   *  (cold load without a gesture) is silently ignored */
+  autoPlayOnActive?: boolean;
   className?: string;
 }) {
   const wrap = useRef<HTMLDivElement>(null);
@@ -41,7 +46,7 @@ export function Waveform({
   const level = useRef(0); // live amplitude 0..1
   const hasStarted = useRef(false); // has the user pressed play at least once
 
-  const { progress, time, duration, playing, report, setPlaying, registerSeek } =
+  const { progress, time, duration, playing, levelRef, report, setPlaying, registerSeek } =
     useTransport();
   const [hoverX, setHoverX] = useState<number | null>(null);
   const [reduce, setReduce] = useState(false);
@@ -85,7 +90,7 @@ export function Waveform({
       for (let i = 0; i < n; i++) {
         const played = i / n < p;
         const amp = Math.max(1.5, peaks[i] * (trackH * 0.46) * (played ? boost : 1));
-        ctx.fillStyle = played ? acc : "rgba(242,240,235,0.26)";
+        ctx.fillStyle = played ? acc : "rgba(242,240,235,0.38)";
         ctx.fillRect(i * bw + bw * 0.22, mid - amp, bw * 0.56, amp * 2);
       }
 
@@ -136,6 +141,7 @@ export function Waveform({
     if (!playing || reduce) {
       cancelAnimationFrame(raf.current);
       level.current = 0;
+      levelRef.current = 0;
       return;
     }
     const loop = () => {
@@ -146,6 +152,7 @@ export function Waveform({
         let sum = 0;
         for (let i = 0; i < f.length; i++) sum += f[i];
         level.current = sum / f.length / 255;
+        levelRef.current = level.current; // feed page-level visualisers
       }
       const au = audio.current;
       if (au && au.duration) draw(au.currentTime / au.duration);
@@ -153,7 +160,7 @@ export function Waveform({
     };
     raf.current = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(raf.current);
-  }, [playing, reduce, draw]);
+  }, [playing, reduce, draw, levelRef]);
 
   // register seek with the shared transport (only when this is the active medium)
   useEffect(() => {
@@ -188,22 +195,38 @@ export function Waveform({
     }
   }, [reduce]);
 
+  const play = useCallback(async () => {
+    const au = audio.current;
+    if (!au) return;
+    // first play jumps to the configured start offset (e.g. 9:35)
+    if (!hasStarted.current && startAt > 0) {
+      au.currentTime = startAt;
+    }
+    hasStarted.current = true;
+    ensureGraph();
+    await ctxRef.current?.resume();
+    au.play().catch(() => {});
+  }, [startAt, ensureGraph]);
+
   const toggle = async () => {
     const au = audio.current;
     if (!au) return;
-    if (au.paused) {
-      // first play jumps to the configured start offset (e.g. 9:35)
-      if (!hasStarted.current && startAt > 0) {
-        au.currentTime = startAt;
-      }
-      hasStarted.current = true;
-      ensureGraph();
-      await ctxRef.current?.resume();
-      au.play().catch(() => {});
-    } else {
-      au.pause();
-    }
+    if (au.paused) await play();
+    else au.pause();
   };
+
+  // entering the active mode starts the piece at its cue (hero only).
+  // Runs on the mode-toggle click's user activation; a cold load in SON
+  // mode rejects play() and simply stays paused.
+  useEffect(() => {
+    if (!active || !autoPlayOnActive || reduce) return;
+    const au = audio.current;
+    if (!au) return;
+    // take over the shared transport display immediately
+    const t = au.currentTime || 0;
+    report({ progress: t / (au.duration || 1), time: t, duration: au.duration || 0 });
+    if (au.paused && !hasStarted.current) play();
+  }, [active, autoPlayOnActive, reduce, report, play]);
 
   const ratioFromEvent = (clientX: number) => {
     const rect = wrap.current!.getBoundingClientRect();
@@ -275,6 +298,9 @@ export function Waveform({
         preload="metadata"
         onTimeUpdate={(e) => {
           const a = e.currentTarget;
+          // only the active medium narrates the shared transport (the hero
+          // video may be reporting in IMAGE mode while the music plays on)
+          if (!active) return;
           report({
             progress: a.currentTime / (a.duration || 1),
             time: a.currentTime,
@@ -287,6 +313,7 @@ export function Waveform({
           if (!hasStarted.current && startAt > 0 && a.duration) {
             a.currentTime = Math.min(startAt, a.duration);
           }
+          if (!active) return;
           const t = a.currentTime || 0;
           report({ progress: t / (a.duration || 1), time: t, duration: a.duration || 0 });
         }}

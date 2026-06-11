@@ -21,6 +21,9 @@ interface TransportValue {
   time: number; // seconds
   duration: number; // seconds
   playing: boolean;
+  /** live audio amplitude 0..1, written by the playing <Waveform> each
+   *  frame (a ref so visualisers can read it without re-renders) */
+  levelRef: React.RefObject<number>;
   report: (p: { progress: number; time: number; duration: number }) => void;
   setPlaying: (b: boolean) => void;
   registerSeek: (fn: (ratio: number) => void) => void;
@@ -44,6 +47,7 @@ export function TransportProvider({ children }: { children: ReactNode }) {
   const [duration, setDuration] = useState(0);
   const [playing, setPlaying] = useState(false);
   const seekRef = useRef<(ratio: number) => void>(() => {});
+  const levelRef = useRef(0);
 
   const report = useCallback(
     (p: { progress: number; time: number; duration: number }) => {
@@ -63,7 +67,7 @@ export function TransportProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const value = useMemo(
-    () => ({ progress, time, duration, playing, report, setPlaying, registerSeek, seekTo }),
+    () => ({ progress, time, duration, playing, levelRef, report, setPlaying, registerSeek, seekTo }),
     [progress, time, duration, playing, report, registerSeek, seekTo],
   );
 

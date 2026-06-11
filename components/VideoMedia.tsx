@@ -18,6 +18,7 @@ export function VideoMedia({
   controls = false,
   active = true,
   bindTransport = false,
+  transportActive,
   className = "",
 }: {
   src?: string;
@@ -28,6 +29,9 @@ export function VideoMedia({
   controls?: boolean;
   active?: boolean;
   bindTransport?: boolean;
+  /** owns the shared transport (seek + reporting); defaults to `active`.
+   *  Lets a background video keep PLAYING while the waveform narrates. */
+  transportActive?: boolean;
   className?: string;
 }) {
   const ref = useRef<HTMLVideoElement>(null);
@@ -48,14 +52,16 @@ export function VideoMedia({
     else v.pause();
   }, [active, autoPlay, reduce]);
 
+  const tActive = transportActive ?? active;
+
   useEffect(() => {
     // only the active medium owns the shared seek handler
-    if (!bindTransport || !transport || !active) return;
+    if (!bindTransport || !transport || !tActive) return;
     transport.registerSeek((ratio) => {
       const v = ref.current;
       if (v && v.duration) v.currentTime = ratio * v.duration;
     });
-  }, [bindTransport, transport, active]);
+  }, [bindTransport, transport, tActive]);
 
   // no source, or the source failed to load → show the still, never the
   // browser's broken-video chrome
@@ -80,7 +86,7 @@ export function VideoMedia({
       src={src}
       onError={() => setFailed(true)}
       onTimeUpdate={
-        bindTransport && transport
+        bindTransport && transport && tActive
           ? (e) => {
               const v = e.currentTarget;
               transport.report({
