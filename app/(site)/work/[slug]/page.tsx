@@ -122,6 +122,17 @@ export default async function ProjectPage({
             <p className="max-w-2xl text-xl leading-relaxed text-paper/85">
               {project.description}
             </p>
+            {project.link && (
+              <a
+                href={project.link}
+                target="_blank"
+                rel="noreferrer"
+                data-cursor-label="Ouvrir"
+                className="mt-8 inline-flex items-center gap-2 rounded-full border border-hairline px-5 py-2 font-mono text-[11px] uppercase tracking-[0.2em] text-paper transition hover:border-transparent hover:bg-[var(--accent)] hover:text-ink"
+              >
+                {project.linkLabel ?? "En savoir plus"} ↗
+              </a>
+            )}
           </Reveal>
         </section>
 

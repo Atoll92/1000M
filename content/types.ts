@@ -41,6 +41,8 @@ export interface Project {
   gear?: string; // "Shot on Arri Alexa Mini"
   credits: ProjectCredit[];
   description: string;
+  link?: string; // external project page
+  linkLabel?: string; // CTA label (defaults to "En savoir plus")
   featured?: boolean;
   order: number;
 }
