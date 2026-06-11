@@ -108,8 +108,9 @@ export default async function ProjectPage({
           </h1>
         </RailSection>
 
-        {/* the margin carries the data; the body carries the prose */}
+        {/* the margin carries the data; the body carries the prose — on paper */}
         <RailSection
+          className="surface-paper"
           rail={
             <dl className="grid grid-cols-2 gap-x-6 gap-y-5 md:grid-cols-1">
               {meta.map(([label, value]) =>
@@ -124,8 +125,8 @@ export default async function ProjectPage({
               )}
             </dl>
           }
-          railClassName="py-2 md:py-14"
-          bodyClassName="pb-14 md:pt-12"
+          railClassName="pt-10 md:py-14"
+          bodyClassName="pb-12 md:py-14"
         >
           <Reveal>
             <p className="max-w-2xl text-lg leading-relaxed text-paper/85 md:text-xl">

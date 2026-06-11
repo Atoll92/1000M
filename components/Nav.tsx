@@ -83,9 +83,9 @@ export function Nav() {
                   onClick={() => setMode(m)}
                   data-cursor-label={m === "image" ? "Voir" : "Écouter"}
                   className={`rounded-full px-3 py-1 font-medium transition ${
-                    mode === m ? "text-ink" : "text-paper/55 hover:text-paper"
+                    mode === m ? "" : "text-paper/55 hover:text-paper"
                   }`}
-                  style={mode === m ? { background: "var(--accent)" } : undefined}
+                  style={mode === m ? { color: "var(--accent)" } : undefined}
                 >
                   {m}
                 </button>

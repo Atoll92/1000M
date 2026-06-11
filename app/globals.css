@@ -6,11 +6,13 @@
  * ------------------------------------------------------------------ */
 
 @theme inline {
-  /* base palette */
-  --color-ink: #0a0a0a;        /* near-black base                 */
-  --color-paper: #f2f0eb;      /* warm paper foreground           */
-  --color-paper-dim: #9a988f;  /* muted metadata grey             */
-  --color-hairline: #2a2a28;   /* thin rule colour                */
+  /* base palette — routed through runtime vars (see :root) so scoped
+     surfaces (.surface-paper) can re-ink every utility in place,
+     exactly like the mode-driven --accent. */
+  --color-ink: var(--ink, #0a0a0a);            /* near-black base       */
+  --color-paper: var(--paper, #f2f0eb);        /* warm paper foreground */
+  --color-paper-dim: var(--paper-dim, #9a988f);/* muted metadata grey   */
+  --color-hairline: var(--hairline, #2a2a28);  /* thin rule colour      */
 
   /* accent is injected at runtime by <ModeProvider> as --accent.
      this maps it into Tailwind so `text-accent`, `bg-accent` work. */
@@ -24,6 +26,12 @@
 }
 
 :root {
+  /* runtime palette, consumed by the @theme mappings above */
+  --ink: #0a0a0a;
+  --paper: #f2f0eb;
+  --paper-dim: #9a988f;
+  --hairline: #2a2a28;
+
   /* default accent (IMAGE). ModeProvider overrides this on its wrapper. */
   --accent: #3b6dff;
   color-scheme: dark;
@@ -143,6 +151,27 @@ html.lenis body { height: auto; }
 }
 
 /* ------------------------------------------------------------------ *
+ *  Paper surface — the margin of the dark print. Re-scopes the ink/
+ *  paper/hairline tokens so everything inside (hairlines, margin
+ *  notes, rails) re-inks itself automatically.
+ * ------------------------------------------------------------------ */
+.surface-paper {
+  background: #f2f0eb;
+  color: #131310;
+  /* invert the runtime palette in scope: "paper" text re-inks to
+     near-black, "ink" panels lift to paper, hairlines lighten.
+     Components keep their classes and re-ink themselves. */
+  --ink: #f2f0eb;
+  --paper: #131310;
+  --paper-dim: #76746a;
+  --hairline: #d8d4c8;
+}
+.surface-paper ::selection {
+  background: var(--color-ink);
+  color: var(--color-paper);
+}
+
+/* ------------------------------------------------------------------ *
  *  Film grain + gate vignette overlays (mounted once in layout)
  * ------------------------------------------------------------------ */
 .grain {
@@ -171,7 +200,8 @@ html.lenis body { height: auto; }
   inset: 0;
   pointer-events: none;
   z-index: 9997;
-  background: radial-gradient(ellipse at center, transparent 52%, rgba(0, 0, 0, 0.55) 100%);
+  /* a whisper of gate — strong vignetting fights the paper surfaces */
+  background: radial-gradient(ellipse at center, transparent 72%, rgba(0, 0, 0, 0.22) 100%);
 }
 
 /* ------------------------------------------------------------------ *

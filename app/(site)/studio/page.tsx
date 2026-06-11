@@ -32,27 +32,30 @@ export default function StudioPage() {
           </Reveal>
         </RailSection>
 
-        {studio.philosophy.map((block, i) => (
-          <RailSection
-            key={i}
-            rail={
-              <p className="margin-note tabular-nums">
-                {String(i + 1).padStart(2, "0")}
-              </p>
-            }
-            railClassName="pt-2 md:py-12"
-            bodyClassName="pb-12 md:pt-10"
-          >
-            <Reveal className="grid grid-cols-1 gap-6 md:grid-cols-12">
-              <h2 className="title text-2xl md:col-span-5 md:text-3xl">
-                {block.heading}
-              </h2>
-              <p className="max-w-xl text-lg leading-relaxed text-paper/85 md:col-span-7">
-                {block.body}
-              </p>
-            </Reveal>
-          </RailSection>
-        ))}
+        {/* the philosophy reads on paper — the margin of the dark print */}
+        <div className="surface-paper">
+          {studio.philosophy.map((block, i) => (
+            <RailSection
+              key={i}
+              rail={
+                <p className="margin-note tabular-nums">
+                  {String(i + 1).padStart(2, "0")}
+                </p>
+              }
+              railClassName="pt-10 md:py-12"
+              bodyClassName="pb-10 md:py-12"
+            >
+              <Reveal className="grid grid-cols-1 gap-6 md:grid-cols-12">
+                <h2 className="title text-2xl md:col-span-5 md:text-3xl">
+                  {block.heading}
+                </h2>
+                <p className="max-w-xl text-lg leading-relaxed text-paper/85 md:col-span-7">
+                  {block.body}
+                </p>
+              </Reveal>
+            </RailSection>
+          ))}
+        </div>
 
         <RailSection
           rail={<p className="margin-note">Services</p>}
