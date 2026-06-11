@@ -97,7 +97,7 @@ export function CrewIndex({ members }: { members: Member[] }) {
         )}
       </div>
 
-      <h1 className="display text-[clamp(2.6rem,8.5vw,8rem)] leading-[1.06] [text-align:justify] [text-justify:inter-word]">
+      <h1 className="display text-[clamp(2rem,6vw,5.5rem)] leading-[1.08] [text-align:justify] [text-justify:inter-word]">
         {members.map((m) => {
           const isActive = active?.slug === m.slug;
           const someActive = active !== null;
