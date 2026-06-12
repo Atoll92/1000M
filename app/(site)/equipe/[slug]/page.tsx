@@ -59,8 +59,9 @@ export default async function MemberPage({
               <p className="margin-note" style={{ color: "var(--accent)" }}>
                 {roleLabel(member)}
               </p>
+              {/* on mobile the skills read below the portrait & bio instead */}
               {member.skills.length ? (
-                <div>
+                <div className="hidden md:block">
                   <p className="margin-note mb-2 opacity-70">Compétences</p>
                   <ul className="space-y-1">
                     {member.skills.map((s) => (
@@ -116,6 +117,23 @@ export default async function MemberPage({
               </p>
             </div>
           </div>
+
+          {/* mobile-only: compétences follow the portrait & bio */}
+          {member.skills.length ? (
+            <div className="mt-10 md:hidden">
+              <p className="margin-note mb-2 opacity-70">Compétences</p>
+              <ul className="space-y-1">
+                {member.skills.map((s) => (
+                  <li
+                    key={s}
+                    className="font-mono text-[11px] uppercase tracking-[0.18em] text-paper-dim"
+                  >
+                    {s}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
         </RailSection>
 
         {/* projects with this member */}
