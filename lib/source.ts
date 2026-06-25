@@ -1,6 +1,6 @@
 import "server-only";
 
-import { hasSanity } from "@/sanity/env";
+import { useSanity } from "@/sanity/env";
 import { client } from "@/sanity/client";
 import * as Q from "@/sanity/queries";
 
@@ -11,10 +11,10 @@ import type { Project, Member } from "@/content/types";
 /**
  * The single data seam. Pages read content through these getters instead of
  * importing the static modules directly. Today every getter returns the
- * bundled /content data, so the site is 100% static and needs no Sanity
- * connection. The moment NEXT_PUBLIC_SANITY_PROJECT_ID is set (and the
- * dataset seeded — see scripts/seed-sanity.mjs), the same getters fetch from
- * Sanity instead, with no page changes.
+ * bundled /content data, so the site is 100% static. Setting
+ * NEXT_PUBLIC_USE_SANITY=true (with a projectId + a seeded dataset) flips
+ * every getter to Sanity, with no page changes. Connecting the Studio alone
+ * (projectId only) does not affect the site — see sanity/env.ts.
  *
  * Scope of this phase: structured content (projects, members) flips through
  * here. The role taxonomy stays a static enum keyed by stable id (identical
@@ -82,25 +82,25 @@ function toMember(r: Raw): Member {
  * ------------------------------------------------------------------ */
 
 export async function getProjects(): Promise<Project[]> {
-  if (!hasSanity) return staticProjects;
+  if (!useSanity) return staticProjects;
   const rows = await client.fetch<Raw[]>(Q.allProjectsQuery);
   return (rows ?? []).map(toProject);
 }
 
 export async function getFeaturedProjects(): Promise<Project[]> {
-  if (!hasSanity) return staticProjects.filter((p) => p.featured);
+  if (!useSanity) return staticProjects.filter((p) => p.featured);
   const rows = await client.fetch<Raw[]>(Q.featuredProjectsQuery);
   return (rows ?? []).map(toProject);
 }
 
 export async function getProjectBySlug(slug: string): Promise<Project | null> {
-  if (!hasSanity) return staticProjects.find((p) => p.slug === slug) ?? null;
+  if (!useSanity) return staticProjects.find((p) => p.slug === slug) ?? null;
   const row = await client.fetch<Raw | null>(Q.projectBySlugQuery, { slug });
   return row ? toProject(row) : null;
 }
 
 export async function getProjectSlugs(): Promise<string[]> {
-  if (!hasSanity) return staticProjects.map((p) => p.slug);
+  if (!useSanity) return staticProjects.map((p) => p.slug);
   return (await client.fetch<string[]>(Q.projectSlugsQuery)) ?? [];
 }
 
@@ -115,7 +115,7 @@ export async function getProjectsForMember(slug: string): Promise<Project[]> {
  * ------------------------------------------------------------------ */
 
 export async function getAllMembers(): Promise<Member[]> {
-  if (!hasSanity) return staticCrew;
+  if (!useSanity) return staticCrew;
   const rows = await client.fetch<Raw[]>(Q.allMembersQuery);
   return (rows ?? []).map(toMember);
 }
@@ -126,12 +126,12 @@ export async function getListedCrew(): Promise<Member[]> {
 }
 
 export async function getMemberBySlug(slug: string): Promise<Member | null> {
-  if (!hasSanity) return staticCrew.find((m) => m.slug === slug) ?? null;
+  if (!useSanity) return staticCrew.find((m) => m.slug === slug) ?? null;
   const row = await client.fetch<Raw | null>(Q.memberBySlugQuery, { slug });
   return row ? toMember(row) : null;
 }
 
 export async function getMemberSlugs(): Promise<string[]> {
-  if (!hasSanity) return staticCrew.map((m) => m.slug);
+  if (!useSanity) return staticCrew.map((m) => m.slug);
   return (await client.fetch<string[]>(Q.memberSlugsQuery)) ?? [];
 }

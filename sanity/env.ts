@@ -7,12 +7,18 @@ export const dataset =
 export const projectId =
   process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "";
 
-/**
- * When no projectId is configured, lib/source.ts serves the bundled
- * /content data so the site runs fully static. Set the projectId (and seed
- * the dataset — npm run seed:sanity) to flip every getter to Sanity.
- */
+/** Studio connection — needs only a projectId (the embedded /admin Studio). */
 export const hasSanity = Boolean(projectId);
+
+/**
+ * Whether the *site* reads live from Sanity. Deliberately separate from
+ * `hasSanity` so the Studio can be connected (projectId set) while the public
+ * site keeps serving the bundled /content. Flip NEXT_PUBLIC_USE_SANITY=true
+ * once the dataset is seeded and reviewed — lib/source.ts switches with no
+ * other change.
+ */
+export const useSanity =
+  hasSanity && process.env.NEXT_PUBLIC_USE_SANITY === "true";
 
 export const readToken = process.env.SANITY_API_READ_TOKEN || "";
 
