@@ -1,5 +1,6 @@
 import { defineType, defineField } from "sanity";
 
+/** Singleton — global identity & contact. Mirrors content/copy.ts → site. */
 export const siteSettings = defineType({
   name: "siteSettings",
   title: "Réglages du site",
@@ -10,13 +11,37 @@ export const siteSettings = defineType({
       title: "Titre du site",
       type: "string",
       description:
-        "Smoke-test phase 2 : seul champ lu par le site (balise <title>). Le reste du contenu est statique dans /content.",
+        "Seul champ actuellement lu par le site en production (balise <title>). Le reste reste statique tant que le contenu n'est pas migré.",
       initialValue: "1000 marges",
     }),
     defineField({
-      name: "showreel",
-      title: "Showreel (accueil)",
-      type: "muxVideo",
+      name: "tagline",
+      title: "Accroche",
+      type: "string",
+      initialValue: "Image & Son",
+    }),
+    defineField({
+      name: "base",
+      title: "Localisation",
+      type: "string",
+      initialValue: "Marseille, FR",
+    }),
+    defineField({
+      name: "email",
+      title: "Email de contact",
+      type: "string",
+    }),
+    defineField({
+      name: "showreelFile",
+      title: "Showreel d'accueil (fichier)",
+      type: "file",
+      options: { accept: "video/*" },
+      description: "Vidéo de fond de la page d'accueil.",
+    }),
+    defineField({
+      name: "showreelUrl",
+      title: "Showreel d'accueil (URL externe)",
+      type: "url",
     }),
     defineField({
       name: "showreelPoster",
@@ -38,11 +63,6 @@ export const siteSettings = defineType({
       type: "string",
       initialValue: "#ffae2b",
       description: "Couleur hex de l'accent en mode Son.",
-    }),
-    defineField({
-      name: "email",
-      title: "Email de contact",
-      type: "string",
     }),
     defineField({
       name: "socials",

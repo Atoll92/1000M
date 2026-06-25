@@ -3,14 +3,15 @@ import { WorkGrid } from "@/components/WorkGrid";
 import { Footer } from "@/components/Footer";
 import { Reveal } from "@/components/Reveal";
 import { RailSection } from "@/components/Rail";
-import { projects } from "@/content";
+import { getProjects } from "@/lib/source";
 
 export const metadata: Metadata = {
   title: "Travaux",
   description: "Films, clips, documentaires, captations, image et son.",
 };
 
-export default function WorkPage() {
+export default async function WorkPage() {
+  const projects = await getProjects();
   return (
     <>
       <main className="min-h-screen pb-28 pt-32">

@@ -1,5 +1,6 @@
 import { defineType, defineField } from "sanity";
 
+/** A crew member. Mirrors content/types.ts → Member. */
 export const member = defineType({
   name: "member",
   title: "Membre",
@@ -34,8 +35,15 @@ export const member = defineType({
     }),
     defineField({
       name: "bio",
-      title: "Bio",
-      type: "localeBlock",
+      title: "Bio (FR)",
+      type: "text",
+      rows: 4,
+    }),
+    defineField({
+      name: "bioEn",
+      title: "Bio (EN)",
+      type: "text",
+      rows: 4,
     }),
     defineField({
       name: "skills",
@@ -45,9 +53,25 @@ export const member = defineType({
       options: { layout: "tags" },
     }),
     defineField({
-      name: "reel",
-      title: "Showreel",
-      type: "muxVideo",
+      name: "reelFile",
+      title: "Showreel (fichier)",
+      type: "file",
+      options: { accept: "video/*" },
+      description: "Vidéo mp4. Laisser vide pour n'afficher que le portrait.",
+    }),
+    defineField({
+      name: "reelUrl",
+      title: "Showreel (URL externe)",
+      type: "url",
+      description: "Alternative au fichier — utilisé si aucun fichier n'est fourni.",
+    }),
+    defineField({
+      name: "listed",
+      title: "Affiché sur la page Équipe",
+      type: "boolean",
+      description:
+        "Décocher pour créditer ce membre sur les projets sans le lister sur la page Équipe.",
+      initialValue: true,
     }),
     defineField({
       name: "order",

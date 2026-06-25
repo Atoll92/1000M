@@ -24,9 +24,11 @@ Live repo: `github.com/Atoll92/1000M` (deploys on Vercel from `main`).
 - **Lenis** smooth scroll · **GSAP** (manifesto load animation)
 - **Web Audio API** waveform · **View Transitions API** · custom cursor · film grain
 - Fonts: **Bricolage Grotesque** (variable display) + **Geist Mono** (metadata)
-- Content is **static** in `/content` (typed modules). **Sanity** is wired only
-  as a gated `siteTitle` smoke-test; the embedded Studio at `/admin` is a future
-  migration target. Don't add a CMS dependency for this phase.
+- Content is **static** in `/content` (typed modules) and read through the
+  `lib/source.ts` seam. **Sanity is fully prepared but dormant**: the Studio at
+  `/admin` has faithful schemas for every type, and the same getters flip to
+  Sanity the moment a projectId is set — no page changes. See "Sanity backoffice"
+  below.
 
 ## Project map
 
@@ -41,13 +43,15 @@ app/
     equipe/ + [slug]      crew index (anorak) + member detail
     studio/ contact/      À propos · Contact
     not-found.tsx
-  admin/[[...tool]]/      embedded Sanity Studio (leave as-is)
+  admin/[[...tool]]/      embedded Sanity Studio
 components/               see "Signature components" below
 content/                  types.ts, roles.ts, crew.ts, projects.ts, copy.ts,
                           peaks.generated.ts (auto), index.ts (helpers)
-sanity/                   client + schemas + gated siteTitle
+lib/source.ts             THE data seam — async getters, static now / Sanity later
+sanity/                   client · env · queries · structure · schemaTypes/
 scripts/peaks.mjs         waveform peaks precompute (ffmpeg | synthetic)
-public/equipe/            crew portraits   public/audio, public/work  media
+scripts/seed-sanity.ts    export /content → seed.ndjson for `sanity dataset import`
+public/equipe/            crew portraits   public/audio, public/work, public/video
 ```
 
 ## Design system (current)
@@ -148,9 +152,50 @@ Worth tackling next (in rough priority):
 6. **Mobile menu / nav** could become a full-screen annotated index rather
    than a dropdown.
 
+## Sanity backoffice (prepared, dormant)
+
+The Studio is a faithful editing surface for the real content, but the running
+site still reads `/content`. Nothing connects to Sanity until you set a
+projectId.
+
+**Architecture**
+- `lib/source.ts` — the single seam. Pages call its async getters
+  (`getProjects`, `getProjectBySlug`, `getListedCrew`, `getMemberBySlug`, …).
+  With no projectId every getter returns bundled `/content`; with one set, the
+  same getters fetch from Sanity and map results 1:1 onto the `content/types.ts`
+  interfaces. **No page changes to go live.**
+- `sanity/queries.ts` — GROQ shaped to those TS types (assets resolved to plain
+  URLs, `member.roles` → role-id strings, credits → `{memberSlug, roleId}`).
+- `sanity/schemaTypes/` — `project`, `member`, `role` documents + `siteSettings`,
+  `homePage`, `studio` singletons. FR-primary with optional flat EN; video/audio
+  as file-upload **or** external URL (front-end coalesces); `peaks` is a
+  read-only field (generated offline by `scripts/peaks.mjs`).
+
+**Scoped boundaries (by design, documented so they're not surprises)**
+- The **role taxonomy** (9 crafts) is a stable enum keyed by `id`. Members carry
+  role *ids*; `roleLabel`/`memberInMode` resolve them from the static
+  `content/roles.ts` even in Sanity mode (the seed creates roles with the same
+  ids). Editors can still see/manage roles in the Studio.
+- **Editorial copy** (`content/copy.ts`: home/studio/contact/footer/site) is
+  mirrored by the `homePage`/`studio`/`siteSettings` singletons and seeded, but
+  the front-end still reads it statically. Wiring it is a later step: swap the
+  `@/content/copy` imports in `page.tsx`, `studio/page.tsx`, `contact/page.tsx`,
+  `Footer.tsx`, `layout.tsx` for `getHomeCopy()`/`getStudio()`/`getSettings()`
+  getters (add them to `lib/source.ts` alongside the existing ones).
+
+**Go live (when ready)**
+1. `npx sanity login` then create a project (or reuse one); copy `.env.local.example`
+   → `.env.local` and fill `NEXT_PUBLIC_SANITY_PROJECT_ID`.
+2. `npm run seed:sanity` → writes `seed.ndjson` from `/content` (uploads local
+   `/public` images + audio, keeps remote demo media as URLs).
+3. `npx sanity dataset import seed.ndjson production --replace`.
+4. Restart dev — the site now reads Sanity; edit at `/admin`. Re-run
+   `npm run peaks` offline whenever you change a SON track, then re-seed/update.
+
 ## Working agreements (keep these intact)
 
-- **Static-first**: all content in `/content`. No new CMS dependency this phase.
+- **Static-first today**: the site renders from `/content` via `lib/source.ts`.
+  Keep that seam — don't reintroduce direct `@/content` data imports in pages.
 - **Keep it green**: `npx tsc --noEmit` and `npm run build` must stay clean
   (build runs lint too). Verify visually with the dev server before pushing.
 - **Accessibility & reduced-motion**: every motion/interaction has a graceful

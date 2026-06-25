@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { CrewIndex } from "@/components/CrewIndex";
 import { Footer } from "@/components/Footer";
 import { RailSection } from "@/components/Rail";
-import { crewSorted } from "@/content";
+import { getListedCrew } from "@/lib/source";
 
 export const metadata: Metadata = {
   title: "Équipe",
@@ -10,8 +10,8 @@ export const metadata: Metadata = {
     "Les artisans de l’image et du son, cadreurs, chefs op, ingénieurs du son, compositeurs, monteurs, étalonneurs.",
 };
 
-export default function EquipePage() {
-  const members = crewSorted();
+export default async function EquipePage() {
+  const members = await getListedCrew();
 
   return (
     <>

@@ -1,25 +1,21 @@
 import type { SchemaTypeDefinition } from "sanity";
 
-import { localeString, localeText, localeBlock } from "./locale";
-import { muxVideo } from "./muxVideo";
 import { role } from "./role";
 import { member } from "./member";
 import { project } from "./project";
 import { studio } from "./studio";
 import { siteSettings } from "./siteSettings";
+import { homePage } from "./homePage";
 
 export const schemaTypes: SchemaTypeDefinition[] = [
   // documents
   project,
   member,
   role,
-  studio,
+  // singletons
   siteSettings,
-  // objects
-  localeString,
-  localeText,
-  localeBlock,
-  muxVideo,
+  homePage,
+  studio,
 ];
 
 export const schema = { types: schemaTypes };

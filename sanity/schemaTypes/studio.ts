@@ -1,14 +1,22 @@
 import { defineType, defineField } from "sanity";
 
+/** Singleton — the À propos page. Mirrors content/copy.ts → studio. */
 export const studio = defineType({
   name: "studio",
   title: "Studio (À propos)",
   type: "document",
   fields: [
     defineField({
+      name: "kicker",
+      title: "Sur-titre",
+      type: "string",
+      description: 'ex. "À propos, 1000 marges".',
+    }),
+    defineField({
       name: "manifesto",
       title: "Manifeste",
-      type: "localeText",
+      type: "text",
+      rows: 3,
       description: "La phrase d'accroche, façon manifeste.",
     }),
     defineField({
@@ -17,13 +25,13 @@ export const studio = defineType({
       type: "array",
       of: [
         defineField({
-          name: "block",
+          name: "philosophyBlock",
           type: "object",
           fields: [
-            defineField({ name: "heading", title: "Titre", type: "localeString" }),
-            defineField({ name: "body", title: "Texte", type: "localeText" }),
+            defineField({ name: "heading", title: "Titre", type: "string" }),
+            defineField({ name: "body", title: "Texte", type: "text", rows: 3 }),
           ],
-          preview: { select: { title: "heading.fr" } },
+          preview: { select: { title: "heading", subtitle: "body" } },
         }),
       ],
     }),
@@ -36,8 +44,8 @@ export const studio = defineType({
           name: "service",
           type: "object",
           fields: [
-            defineField({ name: "title", title: "Service", type: "localeString" }),
-            defineField({ name: "description", title: "Description", type: "localeText" }),
+            defineField({ name: "title", title: "Service", type: "string" }),
+            defineField({ name: "body", title: "Description", type: "text", rows: 2 }),
             defineField({
               name: "category",
               title: "Pôle",
@@ -49,10 +57,10 @@ export const studio = defineType({
                   { title: "Image & Son", value: "both" },
                 ],
               },
-              initialValue: "both",
+              initialValue: "image",
             }),
           ],
-          preview: { select: { title: "title.fr", subtitle: "category" } },
+          preview: { select: { title: "title", subtitle: "category" } },
         }),
       ],
     }),

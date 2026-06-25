@@ -8,7 +8,13 @@ import { TransportProvider } from "@/components/TransportContext";
 import { Footer } from "@/components/Footer";
 import { Reveal } from "@/components/Reveal";
 import { RailSection } from "@/components/Rail";
-import { projects, projectBySlug, memberBySlug, roleById } from "@/content";
+import { roleById } from "@/content";
+import {
+  getProjects,
+  getProjectBySlug,
+  getProjectSlugs,
+  getAllMembers,
+} from "@/lib/source";
 
 const catLabel: Record<string, string> = {
   image: "Image",
@@ -16,8 +22,8 @@ const catLabel: Record<string, string> = {
   both: "Image · Son",
 };
 
-export function generateStaticParams() {
-  return projects.map((p) => ({ slug: p.slug }));
+export async function generateStaticParams() {
+  return (await getProjectSlugs()).map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({
@@ -26,7 +32,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const p = projectBySlug(slug);
+  const p = await getProjectBySlug(slug);
   if (!p) return {};
   return {
     title: p.title,
@@ -40,10 +46,12 @@ export default async function ProjectPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const project = projectBySlug(slug);
+  const project = await getProjectBySlug(slug);
   if (!project) notFound();
 
-  const num = String(projects.findIndex((p) => p.slug === slug) + 1).padStart(2, "0");
+  const allProjects = await getProjects();
+  const num = String(allProjects.findIndex((p) => p.slug === slug) + 1).padStart(2, "0");
+  const membersBySlug = new Map((await getAllMembers()).map((m) => [m.slug, m]));
 
   const meta: [string, string | undefined][] = [
     ["Client", project.client],
@@ -174,7 +182,7 @@ export default async function ProjectPage({
           >
             <ul className="grid grid-cols-2 gap-x-6 gap-y-8 md:grid-cols-3 lg:grid-cols-4">
               {project.credits.map((c, i) => {
-                const m = memberBySlug(c.memberSlug);
+                const m = membersBySlug.get(c.memberSlug);
                 const role = roleById(c.roleId);
                 if (!m) return null;
                 return (

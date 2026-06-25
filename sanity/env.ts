@@ -8,8 +8,9 @@ export const projectId =
   process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "";
 
 /**
- * When no projectId is configured the site renders from local demo data
- * (see lib/demo.ts) so `npm run dev` works before Sanity is wired up.
+ * When no projectId is configured, lib/source.ts serves the bundled
+ * /content data so the site runs fully static. Set the projectId (and seed
+ * the dataset — npm run seed:sanity) to flip every getter to Sanity.
  */
 export const hasSanity = Boolean(projectId);
 

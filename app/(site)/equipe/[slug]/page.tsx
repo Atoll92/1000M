@@ -5,16 +5,16 @@ import { VideoMedia } from "@/components/VideoMedia";
 import { Footer } from "@/components/Footer";
 import { Reveal } from "@/components/Reveal";
 import { RailSection } from "@/components/Rail";
+import { roleLabel } from "@/content";
 import {
-  crew,
-  crewSorted,
-  memberBySlug,
-  projectsForMember,
-  roleLabel,
-} from "@/content";
+  getMemberSlugs,
+  getMemberBySlug,
+  getListedCrew,
+  getProjectsForMember,
+} from "@/lib/source";
 
-export function generateStaticParams() {
-  return crew.map((m) => ({ slug: m.slug }));
+export async function generateStaticParams() {
+  return (await getMemberSlugs()).map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({
@@ -23,7 +23,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const m = memberBySlug(slug);
+  const m = await getMemberBySlug(slug);
   if (!m) return {};
   return { title: m.name, description: `${m.name}, ${roleLabel(m)}` };
 }
@@ -34,14 +34,14 @@ export default async function MemberPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const member = memberBySlug(slug);
+  const member = await getMemberBySlug(slug);
   if (!member) notFound();
 
-  const sorted = crewSorted();
+  const sorted = await getListedCrew();
   const idx = sorted.findIndex((m) => m.slug === slug);
   const prev = sorted[(idx - 1 + sorted.length) % sorted.length];
   const next = sorted[(idx + 1) % sorted.length];
-  const memberProjects = projectsForMember(slug);
+  const memberProjects = await getProjectsForMember(slug);
 
   return (
     <>
